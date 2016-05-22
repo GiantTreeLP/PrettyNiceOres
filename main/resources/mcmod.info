@@ -1,0 +1,16 @@
+[
+{
+  "modid": "prettyniceores",
+  "name": "Pretty Nice Ores Mod",
+  "description": "Adds pretty nice ores.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["GiantTree"],
+  "credits": "GiantTree and the Forge and FML guys, for making FML",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
