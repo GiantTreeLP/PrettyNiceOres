@@ -26,9 +26,9 @@ public class NiceOresGenerator implements IWorldGenerator {
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         switch (world.provider.getDimension()) {
             case 0:
-                for (int x = chunkX * CHUNKSIZE; x < chunkX * CHUNKSIZE + CHUNKSIZE; x++) {
-                    for (int z = chunkZ * CHUNKSIZE; z < chunkZ * CHUNKSIZE + CHUNKSIZE; z++) {
-                        for (int y = 0; y < MAX_HEIGHT; y++) {
+                for (int z = chunkZ * CHUNKSIZE; z < chunkZ * CHUNKSIZE + CHUNKSIZE; z++) {
+                    for (int y = 0; y < MAX_HEIGHT; y++) {
+                        for (int x = chunkX * CHUNKSIZE; x < chunkX * CHUNKSIZE + CHUNKSIZE; x++) {
                             BlockPos blockPos = new BlockPos(x, y, z);
                             PrettyNiceOres.blockList.forEach((name, block) -> {
                                 if (block instanceof IOreDictCompatible) {
