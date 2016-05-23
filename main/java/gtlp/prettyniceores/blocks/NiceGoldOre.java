@@ -2,7 +2,7 @@ package gtlp.prettyniceores.blocks;
 
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
-import net.minecraft.item.Item;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -20,7 +20,7 @@ public class NiceGoldOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Item.getByNameOrId("gold_ingot"));
+        return new ItemStack(Items.gold_ingot);
     }
 
     @Override

@@ -11,7 +11,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -21,25 +20,21 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     public static final String NAME = "nice_coal_ore";
     private static final String OREDICTTYPE = "oreCoal";
+    private static final int SMELTING_AMOUNT = 4;
 
     public NiceCoalOre() {
         super(NAME);
         setHarvestLevel("pickaxe", 1);
     }
 
-    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+    public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Items.coal;
     }
 
     @Override
-    public int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
+    public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
         return MathHelper.getRandomIntegerInRange(rand, 0, 2);
-    }
-
-    @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        return super.getDrops(world, pos, state, fortune);
     }
 
     @Override
@@ -54,7 +49,7 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Item.getByNameOrId("coal"), 4);
+        return new ItemStack(Items.coal, SMELTING_AMOUNT);
     }
 
     @Override
