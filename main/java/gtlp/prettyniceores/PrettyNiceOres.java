@@ -27,7 +27,7 @@ import java.util.Map;
 @Mod(modid = PrettyNiceOres.MODID, version = PrettyNiceOres.VERSION)
 public class PrettyNiceOres {
     public static final String MODID = "prettyniceores";
-    public static final String VERSION = "v0.1";
+    public static final String VERSION = "0.2";
 
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();

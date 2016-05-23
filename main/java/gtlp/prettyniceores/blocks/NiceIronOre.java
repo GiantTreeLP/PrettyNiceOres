@@ -19,22 +19,22 @@ public class NiceIronOre extends NiceOreBase implements ISmeltable, IOreDictComp
     }
 
     @Override
-    public String getOreDictType() {
+    public final String getOreDictType() {
         return OREDICTTYPE;
     }
 
     @Override
-    public String getName() {
+    public final String getName() {
         return NAME;
     }
 
     @Override
-    public ItemStack getSmeltingResult() {
+    public final ItemStack getSmeltingResult() {
         return new ItemStack(Item.getByNameOrId("iron_ingot"));
     }
 
     @Override
-    public float getSmeltingExp() {
+    public final float getSmeltingExp() {
         return 2f;
     }
 }

@@ -21,7 +21,7 @@ import java.util.Map;
 public abstract class NiceOreBase extends BlockOre implements INamedBlock {
 
     public static final PropertyBool SCHEDULED = PropertyBool.create("scheduled");
-    public static final Vec3i[] ADJACENT = new Vec3i[]{new Vec3i(1, 0, 0), new Vec3i(0, 1, 0), new Vec3i(0, 0, 1), new Vec3i(-1, 0, 0), new Vec3i(0, -1, 0), new Vec3i(0, 0, -1)};
+    private static final Vec3i[] ADJACENT = new Vec3i[]{new Vec3i(1, 0, 0), new Vec3i(0, 1, 0), new Vec3i(0, 0, 1), new Vec3i(-1, 0, 0), new Vec3i(0, -1, 0), new Vec3i(0, 0, -1)};
 
     protected NiceOreBase(String name) {
         super();
