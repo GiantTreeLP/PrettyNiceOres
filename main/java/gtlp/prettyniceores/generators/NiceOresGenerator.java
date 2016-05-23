@@ -32,9 +32,9 @@ public class NiceOresGenerator implements IWorldGenerator {
                     if (entry.getValue() instanceof IOreDictCompatible) {
                         OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack ->
                                 !itemStack.isItemEqual(new ItemStack(entry.getValue()))).forEach(itemStack ->
-                                IntStream.rangeClosed(0, world.getActualHeight()).parallel().forEach(y ->
-                                        IntStream.rangeClosed(0, CHUNKSIZE).parallel().forEach(z ->
-                                                IntStream.rangeClosed(0, CHUNKSIZE).parallel().forEach(x -> {
+                                IntStream.range(0, MAX_HEIGHT).parallel().forEach(y ->
+                                        IntStream.range(0, CHUNKSIZE).parallel().forEach(z ->
+                                                IntStream.range(0, CHUNKSIZE).parallel().forEach(x -> {
                                                     BlockPos blockPos = new BlockPos(x, y, z);
                                                     if ((itemStack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock())))) {
                                                         synchronized (this) {

@@ -71,8 +71,16 @@ public class PrettyNiceOres {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        itemList.forEach((name, item) -> registerItemRenderer(item));
-        itemBlockList.forEach((name, item) -> registerItemRenderer(item));
+        itemList.forEach((name, item) -> {
+            if (event.getSide().isClient()) {
+                registerItemRenderer(item);
+            }
+        });
+        itemBlockList.forEach((name, item) -> {
+            if (event.getSide().isClient()) {
+                registerItemRenderer(item);
+            }
+        });
         System.out.println("Init done.");
     }
 
