@@ -3,6 +3,7 @@ package gtlp.prettyniceores;
 import gtlp.prettyniceores.blocks.NiceCoalOre;
 import gtlp.prettyniceores.blocks.NiceGoldOre;
 import gtlp.prettyniceores.blocks.NiceIronOre;
+import gtlp.prettyniceores.blocks.NiceRedstoneOre;
 import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
@@ -39,6 +40,7 @@ public class PrettyNiceOres {
         blockList.put(NiceIronOre.NAME, new NiceIronOre());
         blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
         blockList.put(NiceCoalOre.NAME, new NiceCoalOre());
+        blockList.put(NiceRedstoneOre.NAME, new NiceRedstoneOre());
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
             itemBlock.setRegistryName(block.getRegistryName());
