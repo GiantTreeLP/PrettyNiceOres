@@ -62,13 +62,14 @@ public class PrettyNiceOres {
                 GameRegistry.addSmelting(item, ((ISmeltable) item).getSmeltingResult(), ((ISmeltable) item).getSmeltingExp());
             }
         });
-
+        System.out.println("PreInit done.");
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         itemList.forEach((name, item) -> registerItemRenderer(item));
         itemBlockList.forEach((name, item) -> registerItemRenderer(item));
+        System.out.println("Init done.");
     }
 
     public static void registerItemRenderer(Item item) {
@@ -78,6 +79,7 @@ public class PrettyNiceOres {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Integer.MAX_VALUE);
+        System.out.println("PostInit done.");
     }
 
 }
