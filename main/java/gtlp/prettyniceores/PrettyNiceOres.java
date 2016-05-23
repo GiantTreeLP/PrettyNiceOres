@@ -50,7 +50,7 @@ public class PrettyNiceOres {
                 OreDictionary.registerOre(((IOreDictCompatible) block).getOreDictType(), item);
             }
             if (block instanceof ISmeltable) {
-                GameRegistry.addSmelting(item, ((ISmeltable) block).getSmeltingResult(), 1f);
+                GameRegistry.addSmelting(item, ((ISmeltable) block).getSmeltingResult(), (((ISmeltable) block).getSmeltingExp()));
             }
         });
         itemList.forEach((name, item) -> {
