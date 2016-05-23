@@ -36,7 +36,11 @@ public class NiceRedstoneOre extends NiceOreBase implements ISmeltable, IOreDict
 
     @Override
     public final int quantityDropped(Random random) {
-        return 3 + random.nextInt(3);
+        return 3 + random.nextInt(2);
+    }
+
+    public int quantityDroppedWithBonus(int fortune, Random random) {
+        return this.quantityDropped(random) + random.nextInt(fortune + 1);
     }
 
     @Override

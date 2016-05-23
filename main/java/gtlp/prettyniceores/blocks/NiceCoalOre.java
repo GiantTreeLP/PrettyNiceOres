@@ -27,8 +27,14 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
         setHarvestLevel("pickaxe", 1);
     }
 
+    @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Items.coal;
+    }
+
+    @Override
+    public int quantityDroppedWithBonus(int fortune, Random random) {
+        return this.quantityDropped(random) + random.nextInt(fortune + 1);
     }
 
     @Override

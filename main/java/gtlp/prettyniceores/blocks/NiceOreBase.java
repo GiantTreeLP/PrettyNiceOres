@@ -70,7 +70,7 @@ public abstract class NiceOreBase extends BlockOre implements INamedBlock {
                     }
                     world.setBlockState(entry.getKey(), Blocks.air.getDefaultState());
                     if (itemMainhand != null) {
-                        itemMainhand.attemptDamageItem(1, world.rand);
+                        itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                     }
                 }
 
