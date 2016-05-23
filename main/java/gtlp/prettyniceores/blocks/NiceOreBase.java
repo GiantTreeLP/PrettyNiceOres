@@ -1,13 +1,13 @@
 package gtlp.prettyniceores.blocks;
 
 import gtlp.prettyniceores.PrettyNiceOres;
+import gtlp.prettyniceores.interfaces.INamedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-public abstract class NiceOreBase extends BlockOre {
+public abstract class NiceOreBase extends BlockOre implements INamedBlock {
 
     public static final PropertyBool SCHEDULED = PropertyBool.create("scheduled");
     public static final Vec3i[] ADJACENT = new Vec3i[]{new Vec3i(1, 0, 0), new Vec3i(0, 1, 0), new Vec3i(0, 0, 1), new Vec3i(-1, 0, 0), new Vec3i(0, -1, 0), new Vec3i(0, 0, -1)};
@@ -30,14 +30,6 @@ public abstract class NiceOreBase extends BlockOre {
         setDefaultState(blockState.getBaseState().withProperty(SCHEDULED, false));
         setHardness(10f);
     }
-
-    public static boolean isSmeltable() {
-        return true;
-    }
-
-    public abstract ItemStack getSmeltingResult();
-
-    public abstract String getOreDictType();
 
     public abstract String getName();
 
@@ -57,12 +49,12 @@ public abstract class NiceOreBase extends BlockOre {
 
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        if (willHarvest) {
+        if (willHarvest || player.isCreative()) {
             Map<BlockPos, Block> toCheck = new HashMap<>();
             toCheck.put(pos, this);
             toCheck.putAll(getAdjacentBlocks(world, pos, state));
             toCheck.forEach((position, block) -> world.destroyBlock(position, !player.isCreative()));
-            return true;
+            return false;
         }
         return super.removedByPlayer(state, world, pos, player, false);
     }
