@@ -37,14 +37,13 @@ public class NiceOresGenerator implements IWorldGenerator {
                                                 IntStream.range(0, CHUNKSIZE).parallel().forEach(x -> {
                                                     BlockPos blockPos = new BlockPos(x, y, z);
                                                     if ((itemStack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock())))) {
-                                                        synchronized (this) {
+                                                        synchronized (NiceOresGenerator.class) {
                                                             chunk.setBlockState(blockPos, entry.getValue().getDefaultState());
                                                         }
                                                     }
                                                 }))));
                     }
                 });
-                break;
         }
     }
 
