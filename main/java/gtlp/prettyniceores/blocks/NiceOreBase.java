@@ -64,7 +64,6 @@ public abstract class NiceOreBase extends BlockOre implements INamedBlock {
             toDestroy.put(pos, this);
             toDestroy.putAll(getAdjacentBlocks(world, pos, state, new ConcurrentHashMap<>()));
             world.setBlockState(pos, state.withProperty(SCHEDULED, true));
-            System.out.println(String.format("Removing %d blocks", toDestroy.size()));
             toDestroy.entrySet().parallelStream().forEach(entry -> {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
                 if (player.isCreative() || (itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
