@@ -33,11 +33,6 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
     }
 
     @Override
-    public int quantityDroppedWithBonus(int fortune, Random random) {
-        return this.quantityDropped(random) + random.nextInt(fortune + 1);
-    }
-
-    @Override
     public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
         return MathHelper.getRandomIntegerInRange(rand, 0, 2);

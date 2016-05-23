@@ -7,9 +7,12 @@ import net.minecraft.block.BlockOre;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -66,9 +69,14 @@ public abstract class NiceOreBase extends BlockOre implements INamedBlock {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
                 if (player.isCreative() || (itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
                     if (!player.isCreative()) {
-                        entry.getValue().dropBlockAsItem(world, pos, world.getBlockState(entry.getKey()), 0);
+                        int fortune = 0;
+                        NBTTagList enchantmentTagList = itemMainhand.getEnchantmentTagList();
+                        for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
+                            fortune = enchantmentTagList.getCompoundTagAt(i).getShort("id") == Enchantment.getEnchantmentID(Enchantments.fortune) ? enchantmentTagList.getCompoundTagAt(i).getShort("lvl") : 0;
+                        }
+                        entry.getValue().dropBlockAsItem(world, pos, world.getBlockState(entry.getKey()), fortune);
                     }
-                    world.setBlockState(entry.getKey(), Blocks.air.getDefaultState());
+                    world.setBlockState(entry.getKey(), Blocks.air.getDefaultState(), world.isRemote ? 11 : 3);
                     if (itemMainhand != null) {
                         itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                     }
