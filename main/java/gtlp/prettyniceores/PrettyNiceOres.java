@@ -1,5 +1,6 @@
 package gtlp.prettyniceores;
 
+import gtlp.prettyniceores.blocks.NiceCoalOre;
 import gtlp.prettyniceores.blocks.NiceGoldOre;
 import gtlp.prettyniceores.blocks.NiceIronOre;
 import gtlp.prettyniceores.generators.NiceOresGenerator;
@@ -37,6 +38,7 @@ public class PrettyNiceOres {
     public void preInit(FMLPreInitializationEvent event) {
         blockList.put(NiceIronOre.NAME, new NiceIronOre());
         blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
+        blockList.put(NiceCoalOre.NAME, new NiceCoalOre());
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
             itemBlock.setRegistryName(block.getRegistryName());

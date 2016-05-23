@@ -1,0 +1,55 @@
+{
+  "variants": {
+    "all": [
+      {
+        "model": "prettyniceores:nice_coal_ore"
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 90
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 180
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 270
+      }
+    ],
+    "scheduled=true": [
+      {
+        "model": "prettyniceores:nice_coal_ore"
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 90
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 180
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 270
+      }
+    ],
+    "scheduled=false": [
+      {
+        "model": "prettyniceores:nice_coal_ore"
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 90
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 180
+      },
+      {
+        "model": "prettyniceores:nice_coal_ore",
+        "y": 270
+      }
+    ]
+  }
+}
