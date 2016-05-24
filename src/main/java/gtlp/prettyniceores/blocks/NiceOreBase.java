@@ -2,10 +2,7 @@ package gtlp.prettyniceores.blocks;
 
 import gtlp.prettyniceores.PrettyNiceOres;
 import gtlp.prettyniceores.interfaces.INamedBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
-import net.minecraft.block.properties.PropertyBool;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,12 +10,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 /**
@@ -26,82 +22,78 @@ import java.util.stream.Stream;
  */
 public abstract class NiceOreBase extends BlockOre implements INamedBlock {
 
-    public static final PropertyBool SCHEDULED = PropertyBool.create("scheduled");
     private static final Vec3i[] ADJACENT = new Vec3i[]{new Vec3i(-1, -1, -1), new Vec3i(-1, -1, 0), new Vec3i(-1, -1, 1), new Vec3i(-1, 0, -1), new Vec3i(-1, 0, 0),
                                                         new Vec3i(-1, 0, 1), new Vec3i(-1, 1, -1), new Vec3i(-1, 1, 0), new Vec3i(-1, 1, 1), new Vec3i(0, -1, -1),
                                                         new Vec3i(0, -1, 0), new Vec3i(0, -1, 1), new Vec3i(0, 0, -1), new Vec3i(0, 0, 1), new Vec3i(0, 1, -1), new Vec3i(0, 1, 0),
                                                         new Vec3i(0, 1, 1), new Vec3i(1, -1, -1), new Vec3i(1, -1, 0), new Vec3i(1, -1, 1), new Vec3i(1, 0, -1), new Vec3i(1, 0, 0),
                                                         new Vec3i(1, 0, 1), new Vec3i(1, 1, -1), new Vec3i(1, 1, 0), new Vec3i(1, 1, 1)};
+    private static final int STACK_LIMIT = 1000000;
 
     protected NiceOreBase(String name) {
         super();
         setRegistryName(PrettyNiceOres.MOD_ID, name);
         setUnlocalizedName(name);
-        setDefaultState(blockState.getBaseState().withProperty(SCHEDULED, false));
+        setDefaultState(blockState.getBaseState());
         setHardness(10f);
     }
 
     public abstract String getName();
 
     @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return super.getStateFromMeta(meta);
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return 0;
-    }
-
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, SCHEDULED);
-    }
-
-    @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
-        if (willHarvest || player.isCreative()) {
-            Map<BlockPos, Block> toDestroy = new ConcurrentHashMap<>();
-            toDestroy.put(pos, this);
-            toDestroy.putAll(getAdjacentBlocks(world, pos, state, new ConcurrentHashMap<>()));
-            world.setBlockState(pos, state.withProperty(SCHEDULED, true));
-            toDestroy.entrySet().parallelStream().forEach(entry -> {
+        if (!world.isRemote) {
+            if (willHarvest || player.isCreative()) {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
+
                 if (player.isCreative() || (itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
+                    int fortune = 0;
                     if (!player.isCreative()) {
-                        int fortune = 0;
                         NBTTagList enchantmentTagList = itemMainhand.getEnchantmentTagList();
                         for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
                             fortune = enchantmentTagList.getCompoundTagAt(i).getShort("id") == Enchantment.getEnchantmentID(Enchantments.fortune) ? enchantmentTagList.getCompoundTagAt(i).getShort("lvl") : 0;
                         }
-                        entry.getValue().dropBlockAsItem(world, pos, world.getBlockState(entry.getKey()), fortune);
+
                     }
-                    world.setBlockState(entry.getKey(), Blocks.air.getDefaultState(), world.isRemote ? 11 : 3);
+
+                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock().getRegistryName(), player.isCreative(), itemMainhand, fortune);
+
                     if (itemMainhand != null) {
                         itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                     }
                 }
-
-            });
-            toDestroy.clear();
+            }
         }
         //Prevent duplication
         return false;
     }
 
-    protected Map<BlockPos, Block> getAdjacentBlocks(World world, BlockPos pos, IBlockState state, Map<BlockPos, Block> adjacent) {
-        if (adjacent.containsKey(pos) || Thread.currentThread().getStackTrace().length > 1000) {
-            return adjacent;
+    private void getAdjacentBlocks(World world, BlockPos pos, ResourceLocation registryName, boolean isPlayerCreative, ItemStack itemMainhand, int fortune) {
+        if (!world.getChunkFromBlockCoords(pos).isLoaded() || Thread.currentThread().getStackTrace().length > STACK_LIMIT) {
+            return;
         }
-        adjacent.put(pos, world.getBlockState(pos).getBlock());
-        world.setBlockState(pos, state.withProperty(SCHEDULED, true));
-        Stream.of(ADJACENT).parallel().forEach(vector -> {
-            BlockPos adjacentPos = pos.add(vector);
-            IBlockState blockState = world.getBlockState(adjacentPos);
-            if (!adjacent.containsKey(adjacentPos) && blockState.getBlock().getRegistryName().equals(state.getBlock().getRegistryName()) && !blockState.getValue(SCHEDULED)) {
-                adjacent.putAll(((NiceOreBase) blockState.getBlock()).getAdjacentBlocks(world, adjacentPos, state, adjacent));
+        if (isPlayerCreative || (itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
+            if (!isPlayerCreative) {
+                world.getBlockState(pos).getBlock().dropBlockAsItem(world, pos, world.getBlockState(pos), fortune);
             }
-        });
-
-        return adjacent;
+            world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
+            if (itemMainhand != null) {
+                itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
+            }
+            Stream.of(ADJACENT).forEach(vector -> {
+                Thread t = new Thread(null, () -> {
+                    BlockPos adjacentPos = pos.add(vector);
+                    IBlockState blockState1 = world.getBlockState(adjacentPos);
+                    if (blockState1.getBlock().getRegistryName().equals(registryName)) {
+                        ((NiceOreBase) blockState1.getBlock()).getAdjacentBlocks(world, adjacentPos, registryName, isPlayerCreative, itemMainhand, fortune);
+                    }
+                }, "destroyZeBlocks", 1000000);
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 }
