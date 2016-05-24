@@ -40,7 +40,7 @@ public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCom
     }
 
     @Override
-    public int damageDropped(IBlockState state) {
+    public final int damageDropped(IBlockState state) {
         return EnumDyeColor.BLUE.getDyeDamage();
     }
 

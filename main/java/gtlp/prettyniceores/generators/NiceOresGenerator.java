@@ -20,31 +20,28 @@ import java.util.stream.IntStream;
  */
 public class NiceOresGenerator implements IWorldGenerator {
 
-    private static final int CHUNKSIZE = 16;
+    private static final int CHUNK_SIZE = 16;
     private static final int MAX_HEIGHT = 256;
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         Chunk chunk = chunkProvider.getLoadedChunk(chunkX, chunkZ);
-        switch (world.provider.getDimension()) {
-            case 0:
-                PrettyNiceOres.blockList.entrySet().parallelStream().forEach(entry -> {
-                    if (entry.getValue() instanceof IOreDictCompatible) {
-                        OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack ->
-                                !itemStack.isItemEqual(new ItemStack(entry.getValue()))).forEach(itemStack ->
-                                IntStream.range(0, MAX_HEIGHT).parallel().forEach(y ->
-                                        IntStream.range(0, CHUNKSIZE).parallel().forEach(z ->
-                                                IntStream.range(0, CHUNKSIZE).parallel().forEach(x -> {
-                                                    BlockPos blockPos = new BlockPos(x, y, z);
-                                                    if ((itemStack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock())))) {
-                                                        synchronized (NiceOresGenerator.class) {
-                                                            chunk.setBlockState(blockPos, entry.getValue().getDefaultState());
-                                                        }
-                                                    }
-                                                }))));
-                    }
-                });
-        }
+        PrettyNiceOres.blockList.entrySet().parallelStream().forEach(entry -> {
+            if (entry.getValue() instanceof IOreDictCompatible) {
+                OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack ->
+                        !itemStack.isItemEqual(new ItemStack(entry.getValue()))).forEach(itemStack ->
+                        IntStream.range(0, MAX_HEIGHT).parallel().forEach(y ->
+                                IntStream.range(0, CHUNK_SIZE).parallel().forEach(z ->
+                                        IntStream.range(0, CHUNK_SIZE).parallel().forEach(x -> {
+                                            BlockPos blockPos = new BlockPos(x, y, z);
+                                            if ((itemStack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock())))) {
+                                                synchronized (NiceOresGenerator.class) {
+                                                    chunk.setBlockState(blockPos, entry.getValue().getDefaultState());
+                                                }
+                                            }
+                                        }))));
+            }
+        });
     }
 
     private void runGenerator(WorldGenerator generator, World world, Random rand, int chunk_X, int chunk_Z, int chancesToSpawn, int minHeight, int maxHeight) {
@@ -54,9 +51,9 @@ public class NiceOresGenerator implements IWorldGenerator {
 
         int heightDiff = maxHeight - minHeight + 1;
         for (int i = 0; i < chancesToSpawn; i++) {
-            int x = chunk_X * CHUNKSIZE + rand.nextInt(CHUNKSIZE);
+            int x = chunk_X * CHUNK_SIZE + rand.nextInt(CHUNK_SIZE);
             int y = minHeight + rand.nextInt(heightDiff);
-            int z = chunk_Z * CHUNKSIZE + rand.nextInt(CHUNKSIZE);
+            int z = chunk_Z * CHUNK_SIZE + rand.nextInt(CHUNK_SIZE);
             generator.generate(world, rand, new BlockPos(x, y, z));
         }
     }

@@ -35,7 +35,7 @@ public abstract class NiceOreBase extends BlockOre implements INamedBlock {
 
     protected NiceOreBase(String name) {
         super();
-        setRegistryName(PrettyNiceOres.MODID, name);
+        setRegistryName(PrettyNiceOres.MOD_ID, name);
         setUnlocalizedName(name);
         setDefaultState(blockState.getBaseState().withProperty(SCHEDULED, false));
         setHardness(10f);
