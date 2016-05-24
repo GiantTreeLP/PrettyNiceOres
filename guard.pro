@@ -1,5 +1,5 @@
--injars build\libs\prettyniceores-0.2.jar
--outjars build\libs\prettyniceores-0.2-opt.jar
+-injars build\libs\prettyniceores-1.9-0.0.2.1.jar
+-outjars build\libs\prettyniceores-1.9-0.0.2.1-opt.jar
 
 -libraryjars 'C:\Program Files\Java\jre1.8.0_92\lib\rt.jar'
 -libraryjars 'C:\Users\Marv1\.gradle\caches\minecraft\deobfedDeps\compileDummy.jar'
@@ -61,6 +61,9 @@
 -libraryjars 'C:\Users\Marv1\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.4-nightly-20150209\931074f46c795d2f7b30ed6395df5715cfd7675b\lwjgl-platform-2.9.4-nightly-20150209-natives-linux.jar'
 -libraryjars 'C:\Users\Marv1\.gradle\caches\modules-2\files-2.1\org.lwjgl.lwjgl\lwjgl-platform\2.9.4-nightly-20150209\bcab850f8f487c3f4c4dbabde778bb82bd1a40ed\lwjgl-platform-2.9.4-nightly-20150209-natives-osx.jar'
 -libraryjars 'C:\Users\Marv1\.gradle\caches\minecraft\net\minecraftforge\forge\1.9-12.16.1.1907\snapshot\20160312\forgeSrc-1.9-12.16.1.1907.jar'
+-libraryjars 'C:\Users\Marv1\.gradle\caches\modules-2\files-2.1\com.teambr.bookshelf\Bookshelf-API\1.9-3.0.4-B36\8074b5766a1590ec784bf557b768223fe6813536\Bookshelf-API-1.9-3.0.4-B36-dev.jar'
+-libraryjars 'C:\Users\Marv1\.gradle\caches\modules-2\files-2.1\mcp.mobius.waila\Waila\1.7.0-B2_1.9\e494dd7fef235f7b3644dc78ac8fd70af9b39cf1\Waila-1.7.0-B2_1.9-dev.jar'
+-libraryjars 'C:\Users\Marv1\.gradle\caches\modules-2\files-2.1\com.dyonovan.neotech\NeoTech\1.9-3.0.6-B15\4df6e70e79be395bb06a7d131792a3f5ba6defe3\NeoTech-1.9-3.0.6-B15.jar'
 
 -skipnonpubliclibraryclasses
 -optimizationpasses 5
