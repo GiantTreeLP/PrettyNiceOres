@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
@@ -46,6 +49,8 @@ public class PrettyNiceOres {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         LOGGER = event.getModLog();
+
+        RecipeSorter.register(MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 
         addVanillaOres();
         addNeoTechOres();
@@ -77,7 +82,7 @@ public class PrettyNiceOres {
             }
         });
         recipeList.forEach(GameRegistry::addRecipe);
-        LOGGER.debug("PreInit done.");
+        LOGGER.info("PreInit done.");
     }
 
     private void addVanillaOres() {
@@ -119,7 +124,7 @@ public class PrettyNiceOres {
             IOreDictCompatible block = (IOreDictCompatible) entry.getValue();
             GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionary.getOres(block.getOreDictType()).get(0), block));
         });
-        LOGGER.debug("Init done.");
+        LOGGER.info("Init done.");
     }
 
     @SideOnly(Side.CLIENT)
@@ -130,7 +135,7 @@ public class PrettyNiceOres {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Integer.MAX_VALUE);
-        LOGGER.debug("PostInit done.");
+        LOGGER.info("PostInit done.");
     }
 
 }
