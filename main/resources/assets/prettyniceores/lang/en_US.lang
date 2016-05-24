@@ -5,3 +5,6 @@ tile.nice_lapis_ore.name=Nice Lapis Ore
 tile.nice_diamond_ore.name=Nice Diamond Ore
 tile.nice_emerald_ore.name=Nice Emerald Ore
 tile.nice_redstone_ore.name=Nice Redstone Ore
+tile.nice_copper_ore.name=Nice Copper Ore
+
+item.ingotCopper.name=Copper Ingot
