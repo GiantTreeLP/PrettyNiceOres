@@ -5,11 +5,15 @@ import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
+import gtlp.prettyniceores.items.ItemOreDictCompatible;
+import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -18,31 +22,35 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-@Mod(modid = PrettyNiceOres.MODID, version = PrettyNiceOres.VERSION)
+@Mod(modid = PrettyNiceOres.MOD_ID, version = PrettyNiceOres.VERSION, canBeDeactivated = true, dependencies = "after:neotech@[1.9-3.0.6,)")
 public class PrettyNiceOres {
-    public static final String MODID = "prettyniceores";
-    public static final String VERSION = "0.2";
-
+    public static final String MOD_ID = "prettyniceores";
+    public static final String VERSION = "1.9-0.0.2.1";
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
+    public static Logger LOGGER;
+    public List<IRecipe> recipeList = new ArrayList<>();
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        blockList.put(NiceIronOre.NAME, new NiceIronOre());
-        blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
-        blockList.put(NiceCoalOre.NAME, new NiceCoalOre());
-        blockList.put(NiceRedstoneOre.NAME, new NiceRedstoneOre());
-        blockList.put(NiceLapisOre.NAME, new NiceLapisOre());
-        blockList.put(NiceDiamondOre.NAME, new NiceDiamondOre());
-        blockList.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
+        LOGGER = event.getModLog();
+
+        addVanillaOres();
+        addNeoTechOres();
+
+        addNeoTechItems();
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
             itemBlock.setRegistryName(block.getRegistryName());
@@ -68,7 +76,31 @@ public class PrettyNiceOres {
                 GameRegistry.addSmelting(item, ((ISmeltable) item).getSmeltingResult(), ((ISmeltable) item).getSmeltingExp());
             }
         });
-        System.out.println("PreInit done.");
+        recipeList.forEach(GameRegistry::addRecipe);
+        LOGGER.debug("PreInit done.");
+    }
+
+    private void addVanillaOres() {
+        blockList.put(NiceIronOre.NAME, new NiceIronOre());
+        blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
+        blockList.put(NiceCoalOre.NAME, new NiceCoalOre());
+        blockList.put(NiceRedstoneOre.NAME, new NiceRedstoneOre());
+        blockList.put(NiceLapisOre.NAME, new NiceLapisOre());
+        blockList.put(NiceDiamondOre.NAME, new NiceDiamondOre());
+        blockList.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
+    }
+
+    private void addNeoTechOres() {
+        if (Loader.isModLoaded("neotech")) {
+            blockList.putIfAbsent(NiceCopperOre.NAME, new NiceCopperOre());
+        }
+    }
+
+    private void addNeoTechItems() {
+        if (Loader.isModLoaded("neotech")) {
+            itemList.putIfAbsent("ingotCopper", new ItemOreDictCompatible("ingotCopper"));
+            recipeList.add(new ShapelessOreDictRecipe("nuggetCopper", "ingotCopper", 9));
+        }
     }
 
     @Mod.EventHandler
@@ -83,7 +115,11 @@ public class PrettyNiceOres {
                 registerItemRenderer(item);
             }
         });
-        System.out.println("Init done.");
+        blockList.entrySet().stream().filter(entry -> entry.getValue() instanceof IOreDictCompatible).forEach(entry -> {
+            IOreDictCompatible block = (IOreDictCompatible) entry.getValue();
+            GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionary.getOres(block.getOreDictType()).get(0), block));
+        });
+        LOGGER.debug("Init done.");
     }
 
     @SideOnly(Side.CLIENT)
@@ -94,7 +130,7 @@ public class PrettyNiceOres {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Integer.MAX_VALUE);
-        System.out.println("PostInit done.");
+        LOGGER.debug("PostInit done.");
     }
 
 }
