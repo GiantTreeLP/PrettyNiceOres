@@ -14,6 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.time.StopWatch;
+import org.apache.logging.log4j.Level;
 
 import java.util.stream.Stream;
 
@@ -27,7 +29,7 @@ public abstract class NiceOreBase extends BlockOre implements INamedBlock {
                                                         new Vec3i(0, -1, 0), new Vec3i(0, -1, 1), new Vec3i(0, 0, -1), new Vec3i(0, 0, 1), new Vec3i(0, 1, -1), new Vec3i(0, 1, 0),
                                                         new Vec3i(0, 1, 1), new Vec3i(1, -1, -1), new Vec3i(1, -1, 0), new Vec3i(1, -1, 1), new Vec3i(1, 0, -1), new Vec3i(1, 0, 0),
                                                         new Vec3i(1, 0, 1), new Vec3i(1, 1, -1), new Vec3i(1, 1, 0), new Vec3i(1, 1, 1)};
-    private static final int STACK_LIMIT = 1000000;
+    private static final int STACK_LIMIT = 1024;
 
     protected NiceOreBase(String name) {
         super();
@@ -52,11 +54,14 @@ public abstract class NiceOreBase extends BlockOre implements INamedBlock {
                         for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
                             fortune = enchantmentTagList.getCompoundTagAt(i).getShort("id") == Enchantment.getEnchantmentID(Enchantments.fortune) ? enchantmentTagList.getCompoundTagAt(i).getShort("lvl") : 0;
                         }
-
                     }
-
-                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock().getRegistryName(), player.isCreative(), itemMainhand, fortune);
-
+                    final int finalFortune = fortune;
+                    final Integer[] blocks = {0};
+                    StopWatch stopWatch = new StopWatch();
+                    stopWatch.start();
+                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock().getRegistryName(), player.isCreative(), itemMainhand, finalFortune, blocks);
+                    stopWatch.stop();
+                    PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ns", blocks[0], stopWatch.getNanoTime());
                     if (itemMainhand != null) {
                         itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                     }
@@ -67,33 +72,39 @@ public abstract class NiceOreBase extends BlockOre implements INamedBlock {
         return false;
     }
 
-    private void getAdjacentBlocks(World world, BlockPos pos, ResourceLocation registryName, boolean isPlayerCreative, ItemStack itemMainhand, int fortune) {
-        if (!world.getChunkFromBlockCoords(pos).isLoaded() || Thread.currentThread().getStackTrace().length > STACK_LIMIT) {
+    private void getAdjacentBlocks(World world, BlockPos pos, ResourceLocation registryName, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, Integer[] blocks) {
+        if (!world.getChunkFromBlockCoords(pos).isLoaded()) {
             return;
         }
         if (isPlayerCreative || (itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
             if (!isPlayerCreative) {
                 world.getBlockState(pos).getBlock().dropBlockAsItem(world, pos, world.getBlockState(pos), fortune);
             }
+            blocks[0]++;
             world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
             if (itemMainhand != null) {
                 itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
             }
             Stream.of(ADJACENT).forEach(vector -> {
-                Thread t = new Thread(null, () -> {
-                    BlockPos adjacentPos = pos.add(vector);
-                    IBlockState blockState1 = world.getBlockState(adjacentPos);
-                    if (blockState1.getBlock().getRegistryName().equals(registryName)) {
-                        ((NiceOreBase) blockState1.getBlock()).getAdjacentBlocks(world, adjacentPos, registryName, isPlayerCreative, itemMainhand, fortune);
+                if (Thread.currentThread().getStackTrace().length >= STACK_LIMIT - 1) {
+                    Thread t = new Thread(() -> recurse(pos.add(vector), world, registryName, isPlayerCreative, itemMainhand, fortune, blocks));
+                    t.start();
+                    try {
+                        t.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                }, "destroyZeBlocks", 1000000);
-                t.start();
-                try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } else {
+                    recurse(pos.add(vector), world, registryName, isPlayerCreative, itemMainhand, fortune, blocks);
                 }
             });
+        }
+    }
+
+    private void recurse(BlockPos pos, World world, ResourceLocation registryName, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, Integer[] blocks) {
+        IBlockState blockState = world.getBlockState(pos);
+        if (blockState.getBlock().getRegistryName().equals(registryName)) {
+            ((NiceOreBase) blockState.getBlock()).getAdjacentBlocks(world, pos, registryName, isPlayerCreative, itemMainhand, fortune, blocks);
         }
     }
 }
