@@ -69,11 +69,11 @@ public abstract class NiceOreBase extends BlockOre {
 
                 if (player.isCreative() || (itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
                     int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, itemMainhand);
-                    //Final variables to make lambdas happy.
-                    //Hacky way of allowing a lambda to manipulate a final variable.
+
+                    //Count the amount of destroyed blocks
                     AtomicInteger blocks = new AtomicInteger(0);
 
-                    //Profile the time it takes to destroy all blocks.
+                    //Stop the time it takes to destroy all blocks.
                     StopWatch stopWatch = new StopWatch();
                     stopWatch.start();
                     getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player.isCreative(), itemMainhand, fortune, blocks);
