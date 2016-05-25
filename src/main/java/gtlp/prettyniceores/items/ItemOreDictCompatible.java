@@ -12,6 +12,9 @@ public class ItemOreDictCompatible extends Item implements IOreDictCompatible {
 
     private String oreDictType;
 
+    /**
+     * @param oreDictName name used to register in {@link net.minecraftforge.oredict.OreDictionary}, {@link ItemOreDictCompatible#getOreDictType}
+     */
     public ItemOreDictCompatible(String oreDictName) {
         super();
         this.oreDictType = oreDictName;
@@ -20,6 +23,9 @@ public class ItemOreDictCompatible extends Item implements IOreDictCompatible {
         setCreativeTab(CreativeTabs.tabMaterials);
     }
 
+    /**
+     * @return a String defining the name used by {@link net.minecraftforge.oredict.OreDictionary}
+     */
     @Override
     public final String getOreDictType() {
         return oreDictType;
