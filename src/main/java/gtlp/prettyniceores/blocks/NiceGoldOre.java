@@ -1,5 +1,6 @@
 package gtlp.prettyniceores.blocks;
 
+import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import net.minecraft.init.Items;
@@ -8,10 +9,10 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
  */
-public class NiceGoldOre extends NiceOreBase implements ISmeltable, IOreDictCompatible {
+public class NiceGoldOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
     public static final String NAME = "nice_gold_ore";
-    private static final String OREDICTTYPE = "oreGold";
+    public static final String OREDICTTYPE = "oreGold";
 
     public NiceGoldOre() {
         super(NAME);

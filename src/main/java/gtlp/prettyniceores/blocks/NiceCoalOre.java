@@ -1,5 +1,6 @@
 package gtlp.prettyniceores.blocks;
 
+import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import net.minecraft.block.state.IBlockState;
@@ -16,10 +17,10 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictCompatible {
+public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
     public static final String NAME = "nice_coal_ore";
-    private static final String OREDICTTYPE = "oreCoal";
+    public static final String OREDICTTYPE = "oreCoal";
     private static final int SMELTING_AMOUNT = 4;
 
     public NiceCoalOre() {
