@@ -1,21 +1,23 @@
 package gtlp.prettyniceores.blocks;
 
 import gtlp.prettyniceores.PrettyNiceOres;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.Level;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 /**
@@ -66,26 +68,17 @@ public abstract class NiceOreBase extends BlockOre {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
 
                 if (player.isCreative() || (itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
-                    int fortune = 0;
-                    if (!player.isCreative()) {
-                        NBTTagList enchantmentTagList = itemMainhand.getEnchantmentTagList();
-                        if (enchantmentTagList != null) {
-                            for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
-                                fortune = enchantmentTagList.getCompoundTagAt(i).getShort("id") == Enchantment.getEnchantmentID(Enchantments.fortune) ? enchantmentTagList.getCompoundTagAt(i).getShort("lvl") : 0;
-                            }
-                        }
-                    }
+                    int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, itemMainhand);
                     //Final variables to make lambdas happy.
-                    final int finalFortune = fortune;
                     //Hacky way of allowing a lambda to manipulate a final variable.
-                    final int[] blocks = {0};
+                    AtomicInteger blocks = new AtomicInteger(0);
 
                     //Profile the time it takes to destroy all blocks.
                     StopWatch stopWatch = new StopWatch();
                     stopWatch.start();
-                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock().getRegistryName(), player.isCreative(), itemMainhand, finalFortune, blocks);
+                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player.isCreative(), itemMainhand, fortune, blocks);
                     stopWatch.stop();
-                    PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ns", blocks[0], stopWatch.getNanoTime());
+                    PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ns", blocks.get(), stopWatch.getNanoTime());
                     if (itemMainhand != null) {
                         itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                     }
@@ -99,14 +92,14 @@ public abstract class NiceOreBase extends BlockOre {
     /**
      * @param world            The current world.
      * @param pos              Block position in world.
-     * @param registryName     The name of the block to destroy (immutable, so we can destroy early).
+     * @param block            The source block to search for.
      * @param isPlayerCreative Determines whether or not to drop the item.
      * @param itemMainhand     Item to deal damage to.
      * @param fortune          Determine additional drops.
-     * @param blocks           Array to count the blocks in lambda calls
+     * @param blocks           Integer to count the amount of destroyed blocks
      * @see #removedByPlayer
      */
-    private void getAdjacentBlocks(World world, BlockPos pos, ResourceLocation registryName, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, int[] blocks) {
+    private void getAdjacentBlocks(World world, BlockPos pos, Block block, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
         if (!world.getChunkFromBlockCoords(pos).isLoaded()) {
             return;
         }
@@ -117,24 +110,28 @@ public abstract class NiceOreBase extends BlockOre {
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
             world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
             //Increase amount of destroyed blocks
-            blocks[0]++;
+            blocks.getAndAdd(1);
             if (itemMainhand != null) {
                 itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
             }
+            List<Thread> threads = new ArrayList<>();
             Stream.of(ADJACENT).forEach(vector -> {
                 //Workaround for the 1024 stack limit, increase of stack size is ignored by the JVM
                 if (Thread.currentThread().getStackTrace().length >= STACK_LIMIT - 1) {
-                    Thread t = new Thread(() -> recurse(world, pos.add(vector), registryName, isPlayerCreative, itemMainhand, fortune, blocks));
+                    Thread t = new Thread(() -> recurse(world, pos.add(vector), block, isPlayerCreative, itemMainhand, fortune, blocks));
                     t.start();
-                    try {
-                        t.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    threads.add(t);
                 } else {
-                    recurse(world, pos.add(vector), registryName, isPlayerCreative, itemMainhand, fortune, blocks);
+                    recurse(world, pos.add(vector), block, isPlayerCreative, itemMainhand, fortune, blocks);
                 }
             });
+            for (Thread t : threads) {
+                try {
+                    t.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -144,18 +141,18 @@ public abstract class NiceOreBase extends BlockOre {
      *
      * @param world            The current world.
      * @param pos              Block position in world.
-     * @param registryName     The name of the block to destroy (immutable, so we can destroy early).
+     * @param block            The source block to search for.
      * @param isPlayerCreative Determines whether or not to drop the item.
      * @param itemMainhand     Item to deal damage to.
      * @param fortune          Determine additional drops.
-     * @param blocks           Array to count the blocks in lambda calls
+     * @param blocks           Integer to count the amount of destroyed blocks
      * @see #removedByPlayer
      * @see #getAdjacentBlocks
      */
-    private void recurse(World world, BlockPos pos, ResourceLocation registryName, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, int[] blocks) {
+    private void recurse(World world, BlockPos pos, Block block, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
         IBlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock().getRegistryName().equals(registryName)) {
-            ((NiceOreBase) blockState.getBlock()).getAdjacentBlocks(world, pos, registryName, isPlayerCreative, itemMainhand, fortune, blocks);
+        if (blockState.getBlock() == block) {
+            ((NiceOreBase) blockState.getBlock()).getAdjacentBlocks(world, pos, block, isPlayerCreative, itemMainhand, fortune, blocks);
         }
     }
 }
