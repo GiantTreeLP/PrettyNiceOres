@@ -1,7 +1,7 @@
 [
 {
   "modid": "prettyniceores",
-  "name": "Pretty Nice Ores Mod",
+  "name": "Pretty Nice Ores",
   "description": "Adds pretty nice ores.",
   "version": "${version}",
   "mcversion": "${mcversion}",
