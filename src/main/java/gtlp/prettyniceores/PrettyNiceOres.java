@@ -44,12 +44,11 @@ public class PrettyNiceOres {
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
-    public static Logger LOGGER;
+    public static final Logger LOGGER = LogManager.getFormatterLogger(MOD_ID);
     public List<IRecipe> recipeList = new ArrayList<>();
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        LOGGER = LogManager.getFormatterLogger(MOD_ID);
 
         RecipeSorter.register(MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 

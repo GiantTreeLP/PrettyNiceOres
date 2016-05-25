@@ -12,16 +12,16 @@ public class ItemOreDictCompatible extends Item implements IOreDictCompatible {
 
     private String oreDictType;
 
-    public ItemOreDictCompatible(String oreDictType) {
+    public ItemOreDictCompatible(String oreDictName) {
         super();
+        this.oreDictType = oreDictName;
         setRegistryName(PrettyNiceOres.MOD_ID, oreDictType);
         setUnlocalizedName(oreDictType);
         setCreativeTab(CreativeTabs.tabMaterials);
-        this.oreDictType = oreDictType;
     }
 
     @Override
-    public String getOreDictType() {
+    public final String getOreDictType() {
         return oreDictType;
     }
 }
