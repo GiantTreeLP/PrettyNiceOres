@@ -49,14 +49,15 @@ public abstract class NiceOreBase extends BlockOre {
      * Removes an instance of this block and all adjacent ones {@link #getAdjacentBlocks}
      * Determines fortune level and starts recursive calls.
      * Deals damage to the tool in the players main hand (the used tool)
-     * @see net.minecraft.block.Block#removedByPlayer
-     * @param state The current block state.
-     * @param world The current world
-     * @param player The player damaging the block, may be null
-     * @param pos Block position in world
+     *
+     * @param state       The current block state.
+     * @param world       The current world
+     * @param player      The player damaging the block, may be null
+     * @param pos         Block position in world
      * @param willHarvest True if Block.harvestBlock will be called after this, if the return in true.
-     *        Can be useful to delay the destruction of tile entities till after harvestBlock
+     *                    Can be useful to delay the destruction of tile entities till after harvestBlock
      * @return false, we handle block destruction manually
+     * @see net.minecraft.block.Block#removedByPlayer
      */
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
@@ -68,8 +69,10 @@ public abstract class NiceOreBase extends BlockOre {
                     int fortune = 0;
                     if (!player.isCreative()) {
                         NBTTagList enchantmentTagList = itemMainhand.getEnchantmentTagList();
-                        for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
-                            fortune = enchantmentTagList.getCompoundTagAt(i).getShort("id") == Enchantment.getEnchantmentID(Enchantments.fortune) ? enchantmentTagList.getCompoundTagAt(i).getShort("lvl") : 0;
+                        if (enchantmentTagList != null) {
+                            for (int i = 0; i < enchantmentTagList.tagCount(); i++) {
+                                fortune = enchantmentTagList.getCompoundTagAt(i).getShort("id") == Enchantment.getEnchantmentID(Enchantments.fortune) ? enchantmentTagList.getCompoundTagAt(i).getShort("lvl") : 0;
+                            }
                         }
                     }
                     //Final variables to make lambdas happy.
