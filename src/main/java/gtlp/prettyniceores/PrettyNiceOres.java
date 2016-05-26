@@ -5,7 +5,6 @@ import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
-import gtlp.prettyniceores.items.ItemOreDictCompatible;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -44,6 +43,7 @@ public class PrettyNiceOres {
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
     public static final Logger LOGGER = LogManager.getFormatterLogger(MOD_ID);
+    final static Block[] modBlocks = {new NiceCopperOre()};
     public List<IRecipe> recipeList = new ArrayList<>();
 
     /**
@@ -60,6 +60,7 @@ public class PrettyNiceOres {
         addModOres();
 
         addModItems();
+
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
             itemBlock.setRegistryName(block.getRegistryName());
@@ -100,19 +101,23 @@ public class PrettyNiceOres {
         blockList.put(NiceLapisOre.NAME, new NiceLapisOre());
         blockList.put(NiceDiamondOre.NAME, new NiceDiamondOre());
         blockList.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
+        blockList.put(NiceNetherQuartzOre.NAME, new NiceNetherQuartzOre());
     }
 
+    /**
+     * Adds all replacements for mod ores, if they have been created by any other mod.
+     */
     private void addModOres() {
-        if (OreDictionary.doesOreNameExist(NiceCopperOre.OREDICTTYPE)) {
-            blockList.putIfAbsent(NiceCopperOre.NAME, new NiceCopperOre());
+        for (Block block : modBlocks) {
+            if (block instanceof IOreDictCompatible && block instanceof INamedBlock) {
+                if (OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType())) {
+                    blockList.put(((INamedBlock) block).getName(), block);
+                }
+            }
         }
     }
 
     private void addModItems() {
-        if (OreDictionary.doesOreNameExist("ingotCopper")) {
-            itemList.putIfAbsent("ingotCopper", new ItemOreDictCompatible("ingotCopper"));
-            recipeList.add(new ShapelessOreDictRecipe("nuggetCopper", "ingotCopper", 9));
-        }
     }
 
     /**
