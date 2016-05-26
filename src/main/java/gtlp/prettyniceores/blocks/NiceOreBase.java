@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
@@ -55,7 +56,7 @@ public abstract class NiceOreBase extends BlockOre {
      * @param pos         Block position in world
      * @param willHarvest True if Block.harvestBlock will be called after this, if the return in true.
      *                    Can be useful to delay the destruction of tile entities till after harvestBlock
-     * @return false, we handle block destruction manually
+     * @return true, if the player is in creative mode, otherwise we handle block destruction manually.
      * @see net.minecraft.block.Block#removedByPlayer
      */
     @Override
@@ -103,8 +104,10 @@ public abstract class NiceOreBase extends BlockOre {
         }
         if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
             world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
+            world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
-            world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
+            world.setBlockState(pos, Blocks.air.getDefaultState(), world.isRemote ? 11 : 3);
             //Increase amount of destroyed blocks
             blocks.getAndAdd(1);
             itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 || itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() == 1 ? 1 : 2, world.rand);
