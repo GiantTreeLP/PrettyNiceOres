@@ -15,10 +15,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.Level;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
@@ -64,10 +61,13 @@ public abstract class NiceOreBase extends BlockOre {
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (!world.isRemote) {
-            if (willHarvest || player.isCreative()) {
+            if (player.isCreative()) {
+                return super.removedByPlayer(state, world, pos, player, willHarvest);
+            }
+            if (willHarvest) {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
 
-                if (player.isCreative() || (itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
+                if (itemMainhand != null && itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
                     int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, itemMainhand);
 
                     //Count the amount of destroyed blocks
@@ -76,12 +76,10 @@ public abstract class NiceOreBase extends BlockOre {
                     //Stop the time it takes to destroy all blocks.
                     StopWatch stopWatch = new StopWatch();
                     stopWatch.start();
-                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player.isCreative(), itemMainhand, fortune, blocks);
+                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player, itemMainhand, fortune, blocks);
                     stopWatch.stop();
                     PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ns", blocks.get(), stopWatch.getNanoTime());
-                    if (itemMainhand != null) {
-                        itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
-                    }
+                    itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                 }
             }
         }
@@ -90,46 +88,29 @@ public abstract class NiceOreBase extends BlockOre {
     }
 
     /**
-     * @param world            The current world.
-     * @param pos              Block position in world.
-     * @param block            The source block to search for.
-     * @param isPlayerCreative Determines whether or not to drop the item.
-     * @param itemMainhand     Item to deal damage to.
-     * @param fortune          Determine additional drops.
-     * @param blocks           Integer to count the amount of destroyed blocks
+     * @param world        The current world.
+     * @param pos          Block position in world.
+     * @param block        The source block to search for.
+     * @param player       Determines whether or not to drop the item.
+     * @param itemMainhand Item to deal damage to.
+     * @param fortune      Determine additional drops.
+     * @param blocks       Integer to count the amount of destroyed blocks
      * @see #removedByPlayer
      */
-    private void getAdjacentBlocks(World world, BlockPos pos, Block block, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
+    private void getAdjacentBlocks(World world, BlockPos pos, Block block, EntityPlayer player, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
         if (!world.getChunkFromBlockCoords(pos).isLoaded()) {
             return;
         }
-        if (isPlayerCreative || (itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage())) {
-            if (!isPlayerCreative) {
-                world.getBlockState(pos).getBlock().dropBlockAsItem(world, pos, world.getBlockState(pos), fortune);
-            }
+        if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
+            world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
             world.setBlockState(pos, Blocks.air.getDefaultState(), 3);
             //Increase amount of destroyed blocks
             blocks.getAndAdd(1);
-            if (itemMainhand != null) {
-                itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
-            }
-            List<Thread> threads = new ArrayList<>();
-            Stream.of(ADJACENT).forEach(vector -> {
-                //Workaround for the 1024 stack limit, increase of stack size is ignored by the JVM
-                if (Thread.currentThread().getStackTrace().length >= STACK_LIMIT - 1) {
-                    Thread t = new Thread(() -> recurse(world, pos.add(vector), block, isPlayerCreative, itemMainhand, fortune, blocks));
-                    t.start();
-                    threads.add(t);
-                } else {
-                    recurse(world, pos.add(vector), block, isPlayerCreative, itemMainhand, fortune, blocks);
-                }
-            });
-            for (Thread t : threads) {
-                try {
-                    t.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 || itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() == 1 ? 1 : 2, world.rand);
+            for (Vec3i vector : ADJACENT) {
+                if (Thread.currentThread().getStackTrace().length < STACK_LIMIT - 1) {
+                    recurse(world, pos.add(vector), block, player, itemMainhand, fortune, blocks);
                 }
             }
         }
@@ -139,20 +120,20 @@ public abstract class NiceOreBase extends BlockOre {
      * Determines whether or not to recurse to the next block.
      * Single method to avoid repeating code.
      *
-     * @param world            The current world.
-     * @param pos              Block position in world.
-     * @param block            The source block to search for.
-     * @param isPlayerCreative Determines whether or not to drop the item.
-     * @param itemMainhand     Item to deal damage to.
-     * @param fortune          Determine additional drops.
-     * @param blocks           Integer to count the amount of destroyed blocks
+     * @param world        The current world.
+     * @param pos          Block position in world.
+     * @param block        The source block to search for.
+     * @param player       Determines whether or not to drop the item.
+     * @param itemMainhand Item to deal damage to.
+     * @param fortune      Determine additional drops.
+     * @param blocks       Integer to count the amount of destroyed blocks
      * @see #removedByPlayer
      * @see #getAdjacentBlocks
      */
-    private void recurse(World world, BlockPos pos, Block block, boolean isPlayerCreative, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
+    private void recurse(World world, BlockPos pos, Block block, EntityPlayer player, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
         IBlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() == block) {
-            ((NiceOreBase) blockState.getBlock()).getAdjacentBlocks(world, pos, block, isPlayerCreative, itemMainhand, fortune, blocks);
+            ((NiceOreBase) blockState.getBlock()).getAdjacentBlocks(world, pos, block, player, itemMainhand, fortune, blocks);
         }
     }
 }
