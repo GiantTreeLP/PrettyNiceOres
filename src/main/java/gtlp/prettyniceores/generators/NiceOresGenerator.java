@@ -26,6 +26,9 @@ public class NiceOresGenerator implements IWorldGenerator {
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         Chunk chunk = chunkProvider.getLoadedChunk(chunkX, chunkZ);
+        //Fairly quick nested loop to replace vanilla and ore dictionary ores with ours upon generation of a chunk.
+        //Parallel check.
+        //Synchronized replacement.
         PrettyNiceOres.blockList.entrySet().parallelStream().forEach(entry -> {
             if (entry.getValue() instanceof IOreDictCompatible) {
                 OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack ->
@@ -44,6 +47,16 @@ public class NiceOresGenerator implements IWorldGenerator {
         });
     }
 
+    /**
+     * @param generator The {@link WorldGenerator} to run
+     * @param world The world the generator is run on
+     * @param rand The random object to support constant seeds
+     * @param chunk_X X-coordinate of the chunk
+     * @param chunk_Z Z-coordinate of the chunk
+     * @param chancesToSpawn Amount of tries to run the generator per chunk
+     * @param minHeight Minimum height fr the generator
+     * @param maxHeight Maximum height for the generator
+     */
     private void runGenerator(WorldGenerator generator, World world, Random rand, int chunk_X, int chunk_Z, int chancesToSpawn, int minHeight, int maxHeight) {
         if (minHeight < 0 || maxHeight > MAX_HEIGHT || minHeight > maxHeight) {
             throw new IllegalArgumentException("Illegal Height Arguments for WorldGenerator");

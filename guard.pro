@@ -66,11 +66,13 @@
 -libraryjars 'C:\Users\Marv1\.gradle\caches\modules-2\files-2.1\com.dyonovan.neotech\NeoTech\1.9-3.0.6-B15\4df6e70e79be395bb06a7d131792a3f5ba6defe3\NeoTech-1.9-3.0.6-B15.jar'
 
 -skipnonpubliclibraryclasses
--optimizationpasses 5
+-optimizationpasses 9
 -allowaccessmodification
 -mergeinterfacesaggressively
+-dontobfuscate
 -overloadaggressively
--keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,LocalVariable*Table,*Annotation*,Synthetic,EnclosingMethod
+-keepattributes *Annotation*
+-renamesourcefileattribute SourceFile
 -ignorewarnings
 
 

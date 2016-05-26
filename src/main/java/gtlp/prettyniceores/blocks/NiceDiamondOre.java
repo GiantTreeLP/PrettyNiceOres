@@ -1,5 +1,6 @@
 package gtlp.prettyniceores.blocks;
 
+import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import net.minecraft.block.state.IBlockState;
@@ -16,15 +17,15 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictCompatible {
+public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
     public static final String NAME = "nice_diamond_ore";
-    private static final String OREDICTTYPE = "oreDiamond";
+    public static final String OREDICTTYPE = "oreDiamond";
     private static final int SMELTING_AMOUNT = 1;
 
     public NiceDiamondOre() {
         super(NAME);
-        setLightLevel(1f);
+        setLightLevel(2 / 15f);
         setHarvestLevel("pickaxe", 3);
     }
 
@@ -51,7 +52,7 @@ public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.coal, SMELTING_AMOUNT);
+        return new ItemStack(Items.diamond, SMELTING_AMOUNT);
     }
 
     @Override

@@ -17,27 +17,31 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
+public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
-    public static final String NAME = "nice_emerald_ore";
-    public static final String OREDICTTYPE = "oreEmerald";
+    public static final String NAME = "nice_netherquartz_ore";
+    public static final String OREDICTTYPE = "oreQuartz";
     private static final int SMELTING_AMOUNT = 4;
 
-    public NiceEmeraldOre() {
+    public NiceNetherQuartzOre() {
         super(NAME);
-        setLightLevel(2 / 15f);
-        setHarvestLevel("pickaxe", 3);
+        setHarvestLevel("pickaxe", 2);
     }
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.emerald;
+        return Items.quartz;
     }
 
     @Override
     public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
-        return MathHelper.getRandomIntegerInRange(rand, 3, 7);
+        return MathHelper.getRandomIntegerInRange(rand, 1, 3);
+    }
+
+    @Override
+    public int quantityDropped(IBlockState state, int fortune, Random random) {
+        return super.quantityDropped(state, fortune, random);
     }
 
     @Override
@@ -52,11 +56,11 @@ public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.emerald, SMELTING_AMOUNT);
+        return new ItemStack(Items.quartz, SMELTING_AMOUNT);
     }
 
     @Override
     public final float getSmeltingExp() {
-        return 4f;
+        return 2f;
     }
 }

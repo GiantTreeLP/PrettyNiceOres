@@ -12,16 +12,22 @@ public class ItemOreDictCompatible extends Item implements IOreDictCompatible {
 
     private String oreDictType;
 
-    public ItemOreDictCompatible(String oreDictType) {
+    /**
+     * @param oreDictName name used to register in {@link net.minecraftforge.oredict.OreDictionary}, {@link ItemOreDictCompatible#getOreDictType}
+     */
+    public ItemOreDictCompatible(String oreDictName) {
         super();
+        this.oreDictType = oreDictName;
         setRegistryName(PrettyNiceOres.MOD_ID, oreDictType);
         setUnlocalizedName(oreDictType);
         setCreativeTab(CreativeTabs.tabMaterials);
-        this.oreDictType = oreDictType;
     }
 
+    /**
+     * @return a String defining the name used by {@link net.minecraftforge.oredict.OreDictionary}
+     */
     @Override
-    public String getOreDictType() {
+    public final String getOreDictType() {
         return oreDictType;
     }
 }

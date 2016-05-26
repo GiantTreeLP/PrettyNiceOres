@@ -5,7 +5,6 @@ import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
-import gtlp.prettyniceores.items.ItemOreDictCompatible;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -13,7 +12,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.crafting.IRecipe;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -44,23 +42,29 @@ public class PrettyNiceOres {
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
-    public static Logger LOGGER;
+    public static final Logger LOGGER = LogManager.getFormatterLogger(MOD_ID);
+    final static Block[] modBlocks = {new NiceCopperOre()};
     public List<IRecipe> recipeList = new ArrayList<>();
 
+    /**
+     * Preinitialization of the mod.
+     *
+     * @param event the preinit event sent by Forge, unused.
+     */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        LOGGER = LogManager.getFormatterLogger(MOD_ID);
 
         RecipeSorter.register(MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 
         addVanillaOres();
-        addNeoTechOres();
+        addModOres();
 
-        addNeoTechItems();
+        addModItems();
+
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
             itemBlock.setRegistryName(block.getRegistryName());
-            itemBlockList.put(((INamedBlock) block).getName(), itemBlock);
+            itemBlockList.put(block instanceof INamedBlock ? ((INamedBlock) block).getName() : block.getRegistryName().getResourcePath(), itemBlock);
             GameRegistry.register(block);
         });
         itemBlockList.forEach((name, item) -> {
@@ -86,6 +90,9 @@ public class PrettyNiceOres {
         LOGGER.info("PreInit done.");
     }
 
+    /**
+     * Adds all replacements for the basic vanilla ores
+     */
     private void addVanillaOres() {
         blockList.put(NiceIronOre.NAME, new NiceIronOre());
         blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
@@ -94,21 +101,30 @@ public class PrettyNiceOres {
         blockList.put(NiceLapisOre.NAME, new NiceLapisOre());
         blockList.put(NiceDiamondOre.NAME, new NiceDiamondOre());
         blockList.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
+        blockList.put(NiceNetherQuartzOre.NAME, new NiceNetherQuartzOre());
     }
 
-    private void addNeoTechOres() {
-        if (Loader.isModLoaded("neotech")) {
-            blockList.putIfAbsent(NiceCopperOre.NAME, new NiceCopperOre());
+    /**
+     * Adds all replacements for mod ores, if they have been created by any other mod.
+     */
+    private void addModOres() {
+        for (Block block : modBlocks) {
+            if (block instanceof IOreDictCompatible && block instanceof INamedBlock) {
+                if (OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType())) {
+                    blockList.put(((INamedBlock) block).getName(), block);
+                }
+            }
         }
     }
 
-    private void addNeoTechItems() {
-        if (Loader.isModLoaded("neotech")) {
-            itemList.putIfAbsent("ingotCopper", new ItemOreDictCompatible("ingotCopper"));
-            recipeList.add(new ShapelessOreDictRecipe("nuggetCopper", "ingotCopper", 9));
-        }
+    private void addModItems() {
     }
 
+    /**
+     * Initialization of the mod.
+     *
+     * @param event the init event sent by Forge, used to determine whether or not to register renderers
+     */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         itemList.forEach((name, item) -> {
@@ -128,11 +144,21 @@ public class PrettyNiceOres {
         LOGGER.info("Init done.");
     }
 
+    /**
+     * Registers a default item renderer for the inventory
+     *
+     * @param item to register the item renderer for
+     */
     @SideOnly(Side.CLIENT)
     public static void registerItemRenderer(Item item) {
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
+    /**
+     * Postinitialization of the mod.
+     *
+     * @param event the postinit event sent by Forge, unused.
+     */
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Integer.MAX_VALUE);
