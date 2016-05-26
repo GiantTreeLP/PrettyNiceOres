@@ -59,7 +59,7 @@ public abstract class NiceOreBase extends BlockOre {
      * @see net.minecraft.block.Block#removedByPlayer
      */
     @Override
-    public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+    public final boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
         if (!world.isRemote) {
             if (player.isCreative()) {
                 return super.removedByPlayer(state, world, pos, player, willHarvest);
