@@ -1,2 +1,4 @@
 language: java
 script: gradlew clean check test build jar
+jdk:
+    - openjdk8
