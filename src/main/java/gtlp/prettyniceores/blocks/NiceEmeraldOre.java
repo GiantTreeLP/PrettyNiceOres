@@ -52,7 +52,7 @@ public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.coal, SMELTING_AMOUNT);
+        return new ItemStack(Items.emerald, SMELTING_AMOUNT);
     }
 
     @Override
