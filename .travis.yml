@@ -1,4 +1,5 @@
 language: java
+before-script: chmod +x gradlew
 script: ./gradlew clean check test build jar
 jdk:
     - oraclejdk8
