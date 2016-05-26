@@ -17,7 +17,7 @@ public class NiceCopperOre extends NiceOreBase implements ISmeltable, IOreDictCo
 
     public NiceCopperOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", 1);
     }
 
     @Override
