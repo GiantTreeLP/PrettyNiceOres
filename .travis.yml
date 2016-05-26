@@ -1,4 +1,8 @@
 language: java
+before-install:
+    - sudo add-apt-repository ppa:cwchien/gradle -y
+    - sudo apt-get -qq update
+    - sudo apt-get install -y gradle
 script: gradlew clean check test build jar
 jdk:
-    - openjdk8
+    - oraclejdk8
