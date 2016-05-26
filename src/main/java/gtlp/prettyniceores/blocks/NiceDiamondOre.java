@@ -25,7 +25,7 @@ public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     public NiceDiamondOre() {
         super(NAME);
-        setLightLevel(1f);
+        setLightLevel(2 / 15f);
         setHarvestLevel("pickaxe", 3);
     }
 

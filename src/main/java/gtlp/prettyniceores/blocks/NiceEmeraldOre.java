@@ -25,7 +25,7 @@ public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     public NiceEmeraldOre() {
         super(NAME);
-        setLightLevel(1f);
+        setLightLevel(2 / 15f);
         setHarvestLevel("pickaxe", 3);
     }
 
