@@ -1,0 +1,15 @@
+language: java
+script:
+- "./gradlew setupCiWorkspace build"
+jdk:
+- oraclejdk8
+deploy:
+  provider: releases
+  api_key:
+    secure: ABV4QNdQ4c/325Fp1s4y69tITdy74IkCy1SRDW5iIf+4Oeic2+Y0WaavWv33oD27rrtH0AO2BoSSUXbtrvT2tCiATdmMWOBdextrWeSZb4UAGietGQyzxDLYz0gde6YCpIXlIicyUwed/0Z8XPLpqhnGLEhPM2oP6L5q7baEg+pacs450+b8iCe5nmXoMjRhX6yvrnDlW1RGNXjrL7ntkxaXxGugNxTgIZBLY7QuqiQNIfdEpqxlTXLrobUcBEiYrj5g15Hp7tteSsoaLwvnn9XyJozgyn72D+JsnjORh+/zgIocki7XejRlG2VAjW15zcL5Wr9mRH/6G0I5r3OBGPXnveTdS1B0PHO2XIHLJ+BYoF+L3tRo3mTD3xyIZCoId0+G9ZUnEOuGlHb+zM8i606YmFuGdTpUNGjoWJEPxcm7EKHqskgqrfraKcK1dPK8MiDo8eD64P+vHKd5xl38d+GhVaQGiYtlrm8fGPpe5rGGCaq3Mf1yGCtfnFAoR8jNflS7qSP0sYGKfdOLtYC0KyIty55n/Wr6b8nsC5oS4QS4C4yNlYJtiPPD1kKH8BNRt7no1rx9pZcFP/sV406kh/9APNAPX4h5fboDLoAUZmqVGVZFqGfMZFmrdLTsC4baQw+zsUkRwOXlqys2oTpIUpb+YfD2YdvVAevXilqs9m8=
+  file_glob: true
+  file: "build/libs/*"
+  skip_cleanup: true
+  on:
+    repo: GiantTreeLP/PrettyNiceOres
+    branch: '1.9'
