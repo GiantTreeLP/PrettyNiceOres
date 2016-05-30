@@ -31,7 +31,7 @@ public class NiceIronOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.iron_ingot);
+        return new ItemStack(Items.IRON_INGOT);
     }
 
     @Override
