@@ -31,13 +31,12 @@ public class NiceOresGenerator implements IWorldGenerator {
         //Synchronized replacement.
         PrettyNiceOres.blockList.entrySet().parallelStream().forEach(entry -> {
             if (entry.getValue() instanceof IOreDictCompatible) {
-                ItemStack stack = new ItemStack(entry.getValue());
-                OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack -> !itemStack.isItemEqual(stack)).forEach(itemStack ->
+                OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack -> !itemStack.isItemEqual(new ItemStack(entry.getValue()))).forEach(itemStack ->
                         IntStream.range(0, MAX_HEIGHT).parallel().forEach(y ->
                                 IntStream.range(0, CHUNK_SIZE).parallel().forEach(z ->
                                         IntStream.range(0, CHUNK_SIZE).parallel().forEach(x -> {
                                             BlockPos blockPos = new BlockPos(x, y, z);
-                                            if (stack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock()))) {
+                                            if (itemStack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock()))) {
                                                 synchronized (NiceOresGenerator.class) {
                                                     chunk.setBlockState(blockPos, entry.getValue().getDefaultState());
                                                 }
