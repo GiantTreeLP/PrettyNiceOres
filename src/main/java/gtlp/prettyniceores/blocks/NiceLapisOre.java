@@ -31,7 +31,7 @@ public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCom
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.dye;
+        return Items.DYE;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCom
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.dye, SMELTING_AMOUNT, EnumDyeColor.BLUE.getDyeDamage());
+        return new ItemStack(Items.DYE, SMELTING_AMOUNT, EnumDyeColor.BLUE.getDyeDamage());
     }
 
     @Override
