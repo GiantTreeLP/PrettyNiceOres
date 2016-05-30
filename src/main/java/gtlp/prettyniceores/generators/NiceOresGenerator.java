@@ -31,13 +31,13 @@ public class NiceOresGenerator implements IWorldGenerator {
         //Synchronized replacement.
         PrettyNiceOres.blockList.entrySet().parallelStream().forEach(entry -> {
             if (entry.getValue() instanceof IOreDictCompatible) {
-                OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack ->
-                        !itemStack.isItemEqual(new ItemStack(entry.getValue()))).forEach(itemStack ->
+                ItemStack stack = new ItemStack(entry.getValue());
+                OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack -> !itemStack.isItemEqual(stack)).forEach(itemStack ->
                         IntStream.range(0, MAX_HEIGHT).parallel().forEach(y ->
                                 IntStream.range(0, CHUNK_SIZE).parallel().forEach(z ->
                                         IntStream.range(0, CHUNK_SIZE).parallel().forEach(x -> {
                                             BlockPos blockPos = new BlockPos(x, y, z);
-                                            if ((itemStack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock())))) {
+                                            if (stack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock()))) {
                                                 synchronized (NiceOresGenerator.class) {
                                                     chunk.setBlockState(blockPos, entry.getValue().getDefaultState());
                                                 }
@@ -48,14 +48,14 @@ public class NiceOresGenerator implements IWorldGenerator {
     }
 
     /**
-     * @param generator The {@link WorldGenerator} to run
-     * @param world The world the generator is run on
-     * @param rand The random object to support constant seeds
-     * @param chunk_X X-coordinate of the chunk
-     * @param chunk_Z Z-coordinate of the chunk
+     * @param generator      The {@link WorldGenerator} to run
+     * @param world          The world the generator is run on
+     * @param rand           The random object to support constant seeds
+     * @param chunk_X        X-coordinate of the chunk
+     * @param chunk_Z        Z-coordinate of the chunk
      * @param chancesToSpawn Amount of tries to run the generator per chunk
-     * @param minHeight Minimum height fr the generator
-     * @param maxHeight Maximum height for the generator
+     * @param minHeight      Minimum height fr the generator
+     * @param maxHeight      Maximum height for the generator
      */
     private void runGenerator(WorldGenerator generator, World world, Random rand, int chunk_X, int chunk_Z, int chancesToSpawn, int minHeight, int maxHeight) {
         if (minHeight < 0 || maxHeight > MAX_HEIGHT || minHeight > maxHeight) {

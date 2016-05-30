@@ -35,14 +35,14 @@ import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-@Mod(modid = PrettyNiceOres.MOD_ID, version = PrettyNiceOres.VERSION, canBeDeactivated = true, dependencies = "after:neotech@[1.9-3.0.6,)")
+@Mod(modid = PrettyNiceOres.MOD_ID, version = PrettyNiceOres.VERSION, canBeDeactivated = true, dependencies = "after:neotech@[1.9-3.0.6,);after:tconstruct@[2.3.1,)", acceptedMinecraftVersions = "[1.9,)")
 public class PrettyNiceOres {
     public static final String MOD_ID = "prettyniceores";
-    public static final String VERSION = "1.9-0.0.2.1";
+    public static final String VERSION = "1.9-0.3.0";
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
-    public static final Logger LOGGER = LogManager.getFormatterLogger(MOD_ID);
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     final static Block[] modBlocks = {new NiceCopperOre()};
     public List<IRecipe> recipeList = new ArrayList<>();
 
