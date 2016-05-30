@@ -32,7 +32,7 @@ public class NiceRedstoneOre extends NiceOreBase implements ISmeltable, IOreDict
     }
 
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.redstone;
+        return Items.REDSTONE;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class NiceRedstoneOre extends NiceOreBase implements ISmeltable, IOreDict
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.redstone, 4);
+        return new ItemStack(Items.REDSTONE, 4);
     }
 
     @Override
