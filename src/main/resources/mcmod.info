@@ -9,7 +9,7 @@
   "updateUrl": "",
   "authorList": ["GiantTree"],
   "credits": "GiantTree",
-  "logoFile": "",
+  "logoFile": "icon.png",
   "screenshots": [],
   "dependencies": []
 }
