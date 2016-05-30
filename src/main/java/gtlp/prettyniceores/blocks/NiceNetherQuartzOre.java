@@ -30,7 +30,7 @@ public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOre
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.quartz;
+        return Items.QUARTZ;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOre
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.quartz, SMELTING_AMOUNT);
+        return new ItemStack(Items.QUARTZ, SMELTING_AMOUNT);
     }
 
     @Override

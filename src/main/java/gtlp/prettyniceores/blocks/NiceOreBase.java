@@ -69,7 +69,7 @@ public abstract class NiceOreBase extends BlockOre {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
 
                 if (itemMainhand != null && itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
-                    int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, itemMainhand);
+                    int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand);
 
                     //Count the amount of destroyed blocks
                     AtomicInteger blocks = new AtomicInteger(0);
@@ -107,7 +107,7 @@ public abstract class NiceOreBase extends BlockOre {
             world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
 
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
-            world.setBlockState(pos, Blocks.air.getDefaultState(), world.isRemote ? 11 : 3);
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
             //Increase amount of destroyed blocks
             blocks.getAndAdd(1);
             itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 || itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() == 1 ? 1 : 2, world.rand);
