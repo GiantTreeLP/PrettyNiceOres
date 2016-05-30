@@ -20,7 +20,7 @@ public class ItemOreDictCompatible extends Item implements IOreDictCompatible {
         this.oreDictType = oreDictName;
         setRegistryName(PrettyNiceOres.MOD_ID, oreDictType);
         setUnlocalizedName(oreDictType);
-        setCreativeTab(CreativeTabs.MATERIALS);
+        setCreativeTab(CreativeTabs.tabMaterials);
     }
 
     /**

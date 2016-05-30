@@ -21,7 +21,7 @@ public class NiceGoldOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.GOLD_INGOT);
+        return new ItemStack(Items.gold_ingot);
     }
 
     @Override

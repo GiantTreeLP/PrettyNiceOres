@@ -31,7 +31,7 @@ public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.DIAMOND;
+        return Items.diamond;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.DIAMOND, SMELTING_AMOUNT);
+        return new ItemStack(Items.diamond, SMELTING_AMOUNT);
     }
 
     @Override

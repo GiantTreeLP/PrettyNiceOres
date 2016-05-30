@@ -30,7 +30,7 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.COAL;
+        return Items.coal;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.COAL, SMELTING_AMOUNT);
+        return new ItemStack(Items.coal, SMELTING_AMOUNT);
     }
 
     @Override
