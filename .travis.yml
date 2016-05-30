@@ -1,6 +1,6 @@
 language: java
 script:
-- "./gradlew setupCiWorkspace build curseforge"
+- "./gradlew setupCiWorkspace build"
 jdk:
 - oraclejdk8
 deploy:
