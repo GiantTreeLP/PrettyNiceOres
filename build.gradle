@@ -39,12 +39,6 @@ version = "1.9.4-0.3.1"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
-String curseapitoken = ""
-
-if (project.hasProperty("curseapitoken")) {
-    curseapitoken = project.getProperty("curseapitoken")
-}
-
 minecraft {
     version = "1.9.4-12.17.0.1936-1.9.4"
     runDir = "run"
@@ -102,7 +96,7 @@ processResources
         }
 
 curseforge {
-    apiKey = project.curseapitoken
+    apiKey = apiKey = project.hasProperty("curseapitoken") ? project.getProperty("curseapitoken") : ""
     project {
         id = '245633'
         changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/releases"
