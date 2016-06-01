@@ -9,11 +9,15 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        maven {
+            url 'http://oss.sonatype.org/content/repositories/snapshots/'
+        }
         mavenCentral()
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
+        classpath 'org.standardout:gradle-versioneye-plugin:1.5.0-SNAPSHOT'
     }
 }
 
@@ -21,6 +25,7 @@ repositories {
     mavenCentral()
 }
 
+apply plugin: 'org.standardout.versioneye'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'maven'
 apply plugin: 'java'
@@ -34,9 +39,10 @@ version = "1.9.4-0.3.1"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
-String apitoken = ""
-if (file('apitoken').exists()) {
-    apitoken = file('apitoken').text
+String curseapitoken = ""
+
+if (project.hasProperty("curseapitoken")) {
+    curseapitoken = project.getProperty("curseapitoken")
 }
 
 minecraft {
@@ -96,7 +102,7 @@ processResources
         }
 
 curseforge {
-    apiKey = apitoken
+    apiKey = project.curseapitoken
     project {
         id = '245633'
         changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/releases"
