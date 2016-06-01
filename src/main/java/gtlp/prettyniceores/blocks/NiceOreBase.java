@@ -104,7 +104,10 @@ public abstract class NiceOreBase extends BlockOre {
         }
         if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
             world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
-            world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+            int experience = block.getExpDrop(world.getBlockState(pos), world, pos, fortune);
+            if (experience > 0) {
+                world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), experience));
+            }
 
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
             world.setBlockState(pos, Blocks.air.getDefaultState(), world.isRemote ? 11 : 3);
