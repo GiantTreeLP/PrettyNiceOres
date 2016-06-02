@@ -101,11 +101,11 @@ public abstract class NiceOreBase extends BlockOre {
             return;
         }
         if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
-            int i = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemMainhand);
-            if (i == 0) {
+            int silktouchLvl = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemMainhand);
+            if (silktouchLvl == 0) {
                 world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand));
                 world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand))));
-            } else if (i == 1) {
+            } else if (silktouchLvl >= 1) {
                 Block.spawnAsEntity(world, pos, createStackedBlock(world.getBlockState(pos)));
             }
 
