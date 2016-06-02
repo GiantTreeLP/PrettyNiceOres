@@ -69,7 +69,6 @@ public abstract class NiceOreBase extends BlockOre {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
 
                 if (itemMainhand != null && itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
-                    int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand);
 
                     //Count the amount of destroyed blocks
                     AtomicInteger blocks = new AtomicInteger(0);
@@ -77,7 +76,7 @@ public abstract class NiceOreBase extends BlockOre {
                     //Stop the time it takes to destroy all blocks.
                     StopWatch stopWatch = new StopWatch();
                     stopWatch.start();
-                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player, itemMainhand, fortune, blocks);
+                    getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player, itemMainhand, blocks);
                     stopWatch.stop();
                     PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ns", blocks.get(), stopWatch.getNanoTime());
                     itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
@@ -94,17 +93,24 @@ public abstract class NiceOreBase extends BlockOre {
      * @param block        The source block to search for.
      * @param player       Determines whether or not to drop the item.
      * @param itemMainhand Item to deal damage to.
-     * @param fortune      Determine additional drops.
      * @param blocks       Integer to count the amount of destroyed blocks
      * @see #removedByPlayer
      */
-    private void getAdjacentBlocks(World world, BlockPos pos, Block block, EntityPlayer player, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
+    private void getAdjacentBlocks(World world, BlockPos pos, Block block, EntityPlayer player, ItemStack itemMainhand, AtomicInteger blocks) {
         if (!world.getChunkFromBlockCoords(pos).isLoaded()) {
             return;
         }
         if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
-            world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
-            world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+            int silktouchLvl = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemMainhand);
+            if (silktouchLvl == 0) {
+                int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand);
+                world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
+                if (block.getExpDrop(world.getBlockState(pos), world, pos, fortune) > 0) {
+                    world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+                }
+            } else if (silktouchLvl >= 1) {
+                Block.spawnAsEntity(world, pos, createStackedBlock(world.getBlockState(pos)));
+            }
 
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
@@ -113,30 +119,14 @@ public abstract class NiceOreBase extends BlockOre {
             itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 || itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() == 1 ? 1 : 2, world.rand);
             for (Vec3i vector : ADJACENT) {
                 if (Thread.currentThread().getStackTrace().length < STACK_LIMIT - 1) {
-                    recurse(world, pos.add(vector), block, player, itemMainhand, fortune, blocks);
+                    BlockPos posAdjacent = pos.add(vector);
+                    IBlockState candidateBlockState = world.getBlockState(posAdjacent);
+                    if (candidateBlockState.getBlock() == block) {
+                        ((NiceOreBase) candidateBlockState.getBlock()).getAdjacentBlocks(world, posAdjacent, block, player, itemMainhand, blocks);
+                    }
                 }
             }
         }
     }
 
-    /**
-     * Determines whether or not to recurse to the next block.
-     * Single method to avoid repeating code.
-     *
-     * @param world        The current world.
-     * @param pos          Block position in world.
-     * @param block        The source block to search for.
-     * @param player       Determines whether or not to drop the item.
-     * @param itemMainhand Item to deal damage to.
-     * @param fortune      Determine additional drops.
-     * @param blocks       Integer to count the amount of destroyed blocks
-     * @see #removedByPlayer
-     * @see #getAdjacentBlocks
-     */
-    private void recurse(World world, BlockPos pos, Block block, EntityPlayer player, ItemStack itemMainhand, int fortune, AtomicInteger blocks) {
-        IBlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() == block) {
-            ((NiceOreBase) blockState.getBlock()).getAdjacentBlocks(world, pos, block, player, itemMainhand, fortune, blocks);
-        }
-    }
 }
