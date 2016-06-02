@@ -96,7 +96,7 @@ processResources
         }
 
 curseforge {
-    apiKey = apiKey = project.hasProperty("curseapitoken") ? project.getProperty("curseapitoken") : ""
+    apiKey = project.hasProperty("curseapitoken") ? project.getProperty("curseapitoken") : ""
     project {
         id = '245633'
         changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/releases"
