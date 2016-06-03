@@ -35,7 +35,7 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.9-0.3.2"
+version = "1.9-0.3.3"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
@@ -100,7 +100,7 @@ curseforge {
     project {
         id = '245633'
         changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/releases"
-        releaseType = 'beta'
+        releaseType = 'release'
 
         mainArtifact jar
     }
