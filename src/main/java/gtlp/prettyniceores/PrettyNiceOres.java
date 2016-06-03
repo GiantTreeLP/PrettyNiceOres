@@ -35,7 +35,7 @@ import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-@Mod(modid = PrettyNiceOres.MOD_ID, version = PrettyNiceOres.VERSION, canBeDeactivated = true, dependencies = "after:neotech@[1.9-3.0.6,);after:tconstruct@[2.3.1,)", acceptedMinecraftVersions = "[1.9.4,)")
+@Mod(modid = PrettyNiceOres.MOD_ID, version = PrettyNiceOres.VERSION, canBeDeactivated = true, dependencies = "after:neotech@[1.9-3.0.6,);after:tconstruct@[1.9.4-2.3.1,)", acceptedMinecraftVersions = "[1.9.4,)")
 public class PrettyNiceOres {
     public static final String MOD_ID = "prettyniceores";
     public static final String VERSION = "1.9.4-0.3.2";
