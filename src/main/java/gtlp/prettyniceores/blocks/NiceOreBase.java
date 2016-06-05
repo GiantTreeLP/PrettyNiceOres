@@ -107,10 +107,10 @@ public abstract class NiceOreBase extends BlockOre {
                 int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, itemMainhand);
                 world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
                 if (block.getExpDrop(world.getBlockState(pos), world, pos, fortune) > 0) {
-                    world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+                    world.spawnEntityInWorld(new EntityXPOrb(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
                 }
             } else if (silktouchLvl >= 1) {
-                Block.spawnAsEntity(world, pos, createStackedBlock(world.getBlockState(pos)));
+                Block.spawnAsEntity(world, player.getPosition(), createStackedBlock(world.getBlockState(pos)));
             }
 
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
