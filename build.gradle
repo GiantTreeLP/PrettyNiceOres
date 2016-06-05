@@ -99,7 +99,7 @@ curseforge {
     apiKey = project.hasProperty("curseapitoken") ? project.getProperty("curseapitoken") : ""
     project {
         id = '245633'
-        changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/releases"
+        changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/commits/1.9"
         releaseType = 'release'
 
         mainArtifact jar
