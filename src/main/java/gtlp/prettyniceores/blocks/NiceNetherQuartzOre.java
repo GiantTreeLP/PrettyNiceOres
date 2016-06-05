@@ -12,6 +12,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -34,13 +36,13 @@ public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOre
     }
 
     @Override
-    public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
+    public final int getExpDrop(@Nullable IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
         return MathHelper.getRandomIntegerInRange(rand, 1, 3);
     }
 
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random) {
+    public int quantityDropped(IBlockState state, int fortune, @Nonnull Random random) {
         return super.quantityDropped(state, fortune, random);
     }
 

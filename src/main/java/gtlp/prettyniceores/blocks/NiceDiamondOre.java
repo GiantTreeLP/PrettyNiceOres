@@ -12,6 +12,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -35,7 +36,7 @@ public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictC
     }
 
     @Override
-    public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
+    public final int getExpDrop(@Nullable IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
         return MathHelper.getRandomIntegerInRange(rand, 3, 7);
     }

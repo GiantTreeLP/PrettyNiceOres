@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -60,7 +61,7 @@ public abstract class NiceOreBase extends BlockOre {
      * @see net.minecraft.block.Block#removedByPlayer
      */
     @Override
-    public final boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest) {
+    public final boolean removedByPlayer(@Nonnull IBlockState state, World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer player, boolean willHarvest) {
         if (!world.isRemote) {
             if (player.isCreative()) {
                 return super.removedByPlayer(state, world, pos, player, willHarvest);
@@ -106,10 +107,13 @@ public abstract class NiceOreBase extends BlockOre {
                 int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand);
                 world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
                 if (block.getExpDrop(world.getBlockState(pos), world, pos, fortune) > 0) {
-                    world.spawnEntityInWorld(new EntityXPOrb(world, pos.getX(), pos.getY(), pos.getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+                    world.spawnEntityInWorld(new EntityXPOrb(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
                 }
             } else if (silktouchLvl >= 1) {
-                Block.spawnAsEntity(world, pos, createStackedBlock(world.getBlockState(pos)));
+                ItemStack itemStack = createStackedBlock(world.getBlockState(pos));
+                if (itemStack != null) {
+                    Block.spawnAsEntity(world, player.getPosition(), itemStack);
+                }
             }
 
             //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
