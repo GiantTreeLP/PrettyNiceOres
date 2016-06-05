@@ -40,7 +40,7 @@ group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = "prettyniceores"
 
 minecraft {
-    version = "1.9.4-12.17.0.1937"
+    version = "1.9.4-12.17.0.1954"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -99,8 +99,8 @@ curseforge {
     apiKey = project.hasProperty("curseapitoken") ? project.getProperty("curseapitoken") : ""
     project {
         id = '245633'
-        changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/releases"
-        releaseType = 'beta'
+        changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/commits/1.9.4"
+        releaseType = 'release'
 
         mainArtifact jar
     }
