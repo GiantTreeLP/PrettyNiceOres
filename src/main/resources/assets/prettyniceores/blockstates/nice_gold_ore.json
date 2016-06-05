@@ -9,11 +9,11 @@
         "y": 90
       },
       {
-        "model": "prettyniceores:nice_iron_ore",
+        "model": "prettyniceores:nice_gold_ore",
         "y": 180
       },
       {
-        "model": "prettyniceores:nice_iron_ore",
+        "model": "prettyniceores:nice_gold_ore",
         "y": 270
       }
     ]
