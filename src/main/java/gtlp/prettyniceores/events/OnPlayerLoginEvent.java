@@ -28,7 +28,7 @@ public class OnPlayerLoginEvent {
             Optional<ModContainer> modContainer = Loader.instance().getModList().stream().filter(container -> container.getModId().equals(PrettyNiceOres.MOD_ID)).findFirst();
             ForgeVersion.CheckResult checkResult = ForgeVersion.getResult(modContainer.get());
             if (checkResult.status == ForgeVersion.Status.OUTDATED) {
-                ITextComponent updateMsg = new TextComponentString(TextFormatting.GOLD.toString() + "A new version of PrettyNiceOres is out! Go grab it at " + TextFormatting.BLUE.toString() + checkResult.url);
+                ITextComponent updateMsg = new TextComponentString(TextFormatting.GOLD.toString() + "A new version of " + TextFormatting.DARK_GREEN.toString() + "PrettyNiceOres" + TextFormatting.GOLD.toString() + " is out! Go grab it " + TextFormatting.BLUE.toString() + "here!");
                 ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, checkResult.url);
                 updateMsg.getStyle().setClickEvent(clickEvent);
                 player.addChatComponentMessage(updateMsg);
