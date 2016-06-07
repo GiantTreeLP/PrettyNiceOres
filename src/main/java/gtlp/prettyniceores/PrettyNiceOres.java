@@ -48,7 +48,7 @@ import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
         acceptedMinecraftVersions = "[1.9.4,)")
 public class PrettyNiceOres {
     public static final String MOD_ID = "prettyniceores";
-    public static final String VERSION = "1.9.4-0.3.4";
+    public static final String VERSION = "1.9.4-0.3.5";
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();

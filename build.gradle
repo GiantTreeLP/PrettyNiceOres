@@ -35,7 +35,7 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.9.4-0.3.4"
+version = "1.9.4-0.3.5"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
