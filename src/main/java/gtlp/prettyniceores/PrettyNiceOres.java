@@ -53,7 +53,7 @@ public class PrettyNiceOres {
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final String UPDATE_URL = "https://gist.githubusercontent.com/GiantTreeLP/004d39e818a268b97d6d14f881fcbcef/raw/d6e9d82a480164a1f48e29086d885df0e96f84e0/versions.json";
+    public static final String UPDATE_URL = "https://raw.githubusercontent.com/GiantTreeLP/PrettyNiceOres/1.9.4/versions.json";
     final static Block[] modBlocks = {new NiceCopperOre()};
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
