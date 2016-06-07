@@ -25,7 +25,7 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     public NiceCoalOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 1);
+        setHarvestLevel("pickaxe", 0);
     }
 
     @Override
