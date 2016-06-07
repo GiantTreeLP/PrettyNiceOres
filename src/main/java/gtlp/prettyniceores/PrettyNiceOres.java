@@ -1,6 +1,8 @@
 package gtlp.prettyniceores;
 
 import gtlp.prettyniceores.blocks.*;
+import gtlp.prettyniceores.common.CommonProxy;
+import gtlp.prettyniceores.events.OnPlayerLoginEvent;
 import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
@@ -12,7 +14,9 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -35,15 +39,24 @@ import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-@Mod(modid = PrettyNiceOres.MOD_ID, version = PrettyNiceOres.VERSION, canBeDeactivated = true, dependencies = "after:neotech@[1.9-3.0.6,);after:tconstruct@[1.9.4-2.3.1,)", acceptedMinecraftVersions = "[1.9.4,)")
+@Mod(modid = PrettyNiceOres.MOD_ID,
+        version = PrettyNiceOres.VERSION,
+        canBeDeactivated = true,
+        name = "PrettyNiceOres",
+        updateJSON = PrettyNiceOres.UPDATE_URL,
+        dependencies = "after:neotech;after:tconstruct",
+        acceptedMinecraftVersions = "[1.9.4,)")
 public class PrettyNiceOres {
     public static final String MOD_ID = "prettyniceores";
-    public static final String VERSION = "1.9.4-0.3.4";
+    public static final String VERSION = "1.9.4-0.3.5";
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static final String UPDATE_URL = "https://raw.githubusercontent.com/GiantTreeLP/PrettyNiceOres/1.9.4/versions.json";
     final static Block[] modBlocks = {new NiceCopperOre()};
+    @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
+    public static CommonProxy proxy;
     public List<IRecipe> recipeList = new ArrayList<>();
 
     /**
@@ -53,7 +66,6 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-
         RecipeSorter.register(MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 
         addVanillaOres();
@@ -87,6 +99,7 @@ public class PrettyNiceOres {
             }
         });
         recipeList.forEach(GameRegistry::addRecipe);
+        MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
         LOGGER.info("PreInit done.");
     }
 
@@ -141,6 +154,7 @@ public class PrettyNiceOres {
             IOreDictCompatible block = (IOreDictCompatible) entry.getValue();
             GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionary.getOres(block.getOreDictType()).get(0), block));
         });
+
         LOGGER.info("Init done.");
     }
 
@@ -164,5 +178,4 @@ public class PrettyNiceOres {
         GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Integer.MAX_VALUE);
         LOGGER.info("PostInit done.");
     }
-
 }
