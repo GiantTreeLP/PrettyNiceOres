@@ -28,7 +28,7 @@ public class NiceRedstoneOre extends NiceOreBase implements ISmeltable, IOreDict
 
     public NiceRedstoneOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 1);
+        setHarvestLevel("pickaxe", 2);
     }
 
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
