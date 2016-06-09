@@ -1,6 +1,7 @@
 package gtlp.prettyniceores;
 
 import gtlp.prettyniceores.blocks.modded.NiceCopperOre;
+import gtlp.prettyniceores.blocks.modded.NiceTinOre;
 import gtlp.prettyniceores.blocks.vanilla.*;
 import gtlp.prettyniceores.common.CommonProxy;
 import gtlp.prettyniceores.events.OnPlayerLoginEvent;
@@ -49,7 +50,7 @@ public class PrettyNiceOres {
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
-    final static List<Block> modBlocks = new ArrayList<>(Arrays.asList(new NiceCopperOre()));
+    final static List<Block> modBlocks = new ArrayList<>(Arrays.asList(new NiceCopperOre(), new NiceTinOre()));
 
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
@@ -123,6 +124,7 @@ public class PrettyNiceOres {
                 if (OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType())) {
                     blockList.put(((INamedBlock) block).getName(), block);
                 } else {
+                    modBlocks.remove(block);
                 }
             }
         }
