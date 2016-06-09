@@ -5,7 +5,7 @@
   "description": "Adds pretty nice ores.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "http://minecraft.curseforge.com/projects/prettyniceores/files",
   "updateUrl": "",
   "authorList": ["GiantTree"],
   "credits": "GiantTree",
