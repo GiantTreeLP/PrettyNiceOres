@@ -1,6 +1,7 @@
 package gtlp.prettyniceores;
 
-import gtlp.prettyniceores.blocks.*;
+import gtlp.prettyniceores.blocks.modded.NiceCopperOre;
+import gtlp.prettyniceores.blocks.vanilla.*;
 import gtlp.prettyniceores.common.CommonProxy;
 import gtlp.prettyniceores.events.OnPlayerLoginEvent;
 import gtlp.prettyniceores.generators.NiceOresGenerator;
@@ -29,10 +30,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 
@@ -51,7 +49,7 @@ public class PrettyNiceOres {
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
-    final static Block[] modBlocks = {new NiceCopperOre()};
+    final static List<Block> modBlocks = new ArrayList<>(Arrays.asList(new NiceCopperOre()));
 
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
@@ -124,6 +122,7 @@ public class PrettyNiceOres {
             if (block instanceof IOreDictCompatible && block instanceof INamedBlock) {
                 if (OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType())) {
                     blockList.put(((INamedBlock) block).getName(), block);
+                } else {
                 }
             }
         }

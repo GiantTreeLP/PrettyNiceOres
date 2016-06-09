@@ -1,5 +1,6 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;

@@ -1,5 +1,6 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
@@ -17,31 +18,27 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
+public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
-    public static final String NAME = "nice_netherquartz_ore";
-    public static final String OREDICTTYPE = "oreQuartz";
-    private static final int SMELTING_AMOUNT = 4;
+    public static final String NAME = "nice_diamond_ore";
+    public static final String OREDICTTYPE = "oreDiamond";
+    private static final int SMELTING_AMOUNT = 1;
 
-    public NiceNetherQuartzOre() {
+    public NiceDiamondOre() {
         super(NAME);
+        setLightLevel(2 / 15f);
         setHarvestLevel("pickaxe", 2);
     }
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.quartz;
+        return Items.diamond;
     }
 
     @Override
     public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
-        return MathHelper.getRandomIntegerInRange(rand, 1, 3);
-    }
-
-    @Override
-    public final int quantityDropped(IBlockState state, int fortune, Random random) {
-        return super.quantityDropped(state, fortune, random);
+        return MathHelper.getRandomIntegerInRange(rand, 3, 7);
     }
 
     @Override
@@ -56,11 +53,11 @@ public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOre
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.quartz, SMELTING_AMOUNT);
+        return new ItemStack(Items.diamond, SMELTING_AMOUNT);
     }
 
     @Override
     public final float getSmeltingExp() {
-        return 2f;
+        return 4f;
     }
 }
