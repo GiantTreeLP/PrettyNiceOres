@@ -1,5 +1,6 @@
 package gtlp.prettyniceores.blocks;
 
+import gtlp.prettyniceores.Constants;
 import gtlp.prettyniceores.PrettyNiceOres;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
@@ -39,7 +40,7 @@ public abstract class NiceOreBase extends BlockOre {
      */
     protected NiceOreBase(String name) {
         super();
-        setRegistryName(PrettyNiceOres.MOD_ID, name);
+        setRegistryName(Constants.MOD_ID, name);
         setUnlocalizedName(name);
         setDefaultState(blockState.getBaseState());
         setHardness(10f);
@@ -69,7 +70,6 @@ public abstract class NiceOreBase extends BlockOre {
                 ItemStack itemMainhand = player.getHeldItemMainhand();
 
                 if (itemMainhand != null && itemMainhand.canHarvestBlock(state) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
-                    int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.fortune, itemMainhand);
 
                     //Count the amount of destroyed blocks
                     AtomicInteger blocks = new AtomicInteger(0);
@@ -79,7 +79,7 @@ public abstract class NiceOreBase extends BlockOre {
                     stopWatch.start();
                     getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player, itemMainhand, blocks);
                     stopWatch.stop();
-                    PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ns", blocks.get(), stopWatch.getNanoTime());
+                    PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ms", blocks.get(), stopWatch.getSplitTime());
                     itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                 }
             }

@@ -39,22 +39,20 @@ import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-@Mod(modid = PrettyNiceOres.MOD_ID,
-        version = PrettyNiceOres.VERSION,
+@Mod(modid = Constants.MOD_ID,
+        version = Constants.VERSION,
         canBeDeactivated = true,
-        name = "PrettyNiceOres",
-        updateJSON = PrettyNiceOres.UPDATE_URL,
-        dependencies = "after:neotech;after:tconstruct",
-        acceptedMinecraftVersions = "[1.9,)")
+        name = Constants.NAME,
+        updateJSON = Constants.UPDATE_URL,
+        dependencies = Constants.DEPENDENCIES,
+        acceptedMinecraftVersions = Constants.MC_VERSION)
 public class PrettyNiceOres {
-    public static final String MOD_ID = "prettyniceores";
-    public static final String VERSION = "1.9-0.3.5";
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final String UPDATE_URL = "https://raw.githubusercontent.com/GiantTreeLP/PrettyNiceOres/1.9.4/versions.json";
+    public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
     final static Block[] modBlocks = {new NiceCopperOre()};
+
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
     public List<IRecipe> recipeList = new ArrayList<>();
@@ -67,7 +65,7 @@ public class PrettyNiceOres {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
-        RecipeSorter.register(MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 
         addVanillaOres();
         addModOres();

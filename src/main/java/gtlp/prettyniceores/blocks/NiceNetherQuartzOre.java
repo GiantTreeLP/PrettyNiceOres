@@ -40,7 +40,7 @@ public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOre
     }
 
     @Override
-    public int quantityDropped(IBlockState state, int fortune, Random random) {
+    public final int quantityDropped(IBlockState state, int fortune, Random random) {
         return super.quantityDropped(state, fortune, random);
     }
 
