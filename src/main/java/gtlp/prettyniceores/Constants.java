@@ -6,7 +6,7 @@ package gtlp.prettyniceores;
 public final class Constants {
 
     public static final String MOD_ID = "prettyniceores";
-    public static final String VERSION = "1.9-0.3.5";
+    public static final String VERSION = "1.9-0.3.6";
     public static final String UPDATE_URL = "https://raw.githubusercontent.com/GiantTreeLP/PrettyNiceOres/1.9.4/versions.json";
     public static final String NAME = "PrettyNiceOres";
     public static final String DEPENDENCIES = "after:neotech;after:tconstruct";

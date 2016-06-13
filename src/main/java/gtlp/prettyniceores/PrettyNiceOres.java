@@ -51,6 +51,7 @@ import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
         updateJSON = Constants.UPDATE_URL,
         dependencies = Constants.DEPENDENCIES,
         acceptedMinecraftVersions = Constants.MC_VERSION)
+
 public class PrettyNiceOres {
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
