@@ -1,5 +1,6 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
@@ -28,7 +29,7 @@ public class NiceRedstoneOre extends NiceOreBase implements ISmeltable, IOreDict
 
     public NiceRedstoneOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
@@ -58,38 +59,38 @@ public class NiceRedstoneOre extends NiceOreBase implements ISmeltable, IOreDict
 
     private void spawnParticles(World worldIn, BlockPos pos) {
         Random random = worldIn.rand;
-        double d0 = 0.0625D;
+        float d0 = 0.0625F;
 
         for (int i = 0; i < 6; ++i) {
-            double d1 = (double) ((float) pos.getX() + random.nextFloat());
-            double d2 = (double) ((float) pos.getY() + random.nextFloat());
-            double d3 = (double) ((float) pos.getZ() + random.nextFloat());
+            float d1 = ((float) pos.getX() + random.nextFloat());
+            float d2 = ((float) pos.getY() + random.nextFloat());
+            float d3 = ((float) pos.getZ() + random.nextFloat());
 
             if (i == 0 && !worldIn.getBlockState(pos.up()).isOpaqueCube()) {
-                d2 = (double) pos.getY() + d0 + 1.0D;
+                d2 = pos.getY() + d0 + 1.0F;
             }
 
             if (i == 1 && !worldIn.getBlockState(pos.down()).isOpaqueCube()) {
-                d2 = (double) pos.getY() - d0;
+                d2 = pos.getY() - d0;
             }
 
             if (i == 2 && !worldIn.getBlockState(pos.south()).isOpaqueCube()) {
-                d3 = (double) pos.getZ() + d0 + 1.0D;
+                d3 = pos.getZ() + d0 + 1.0F;
             }
 
             if (i == 3 && !worldIn.getBlockState(pos.north()).isOpaqueCube()) {
-                d3 = (double) pos.getZ() - d0;
+                d3 = pos.getZ() - d0;
             }
 
             if (i == 4 && !worldIn.getBlockState(pos.east()).isOpaqueCube()) {
-                d1 = (double) pos.getX() + d0 + 1.0D;
+                d1 = pos.getX() + d0 + 1.0F;
             }
 
             if (i == 5 && !worldIn.getBlockState(pos.west()).isOpaqueCube()) {
-                d1 = (double) pos.getX() - d0;
+                d1 = pos.getX() - d0;
             }
 
-            if (d1 < (double) pos.getX() || d1 > (double) (pos.getX() + 1) || d2 < 0.0D || d2 > (double) (pos.getY() + 1) || d3 < (double) pos.getZ() || d3 > (double) (pos.getZ() + 1)) {
+            if (d1 < pos.getX() || d1 > (pos.getX() + 1) || d2 < 0.0F || d2 > (pos.getY() + 1) || d3 < pos.getZ() || d3 > (pos.getZ() + 1)) {
                 worldIn.spawnParticle(EnumParticleTypes.REDSTONE, d1, d2, d3, 0.0D, 0.0D, 0.0D);
             }
         }

@@ -1,6 +1,6 @@
 package gtlp.prettyniceores.items;
 
-import gtlp.prettyniceores.PrettyNiceOres;
+import gtlp.prettyniceores.Constants;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -18,7 +18,7 @@ public class ItemOreDictCompatible extends Item implements IOreDictCompatible {
     public ItemOreDictCompatible(String oreDictName) {
         super();
         this.oreDictType = oreDictName;
-        setRegistryName(PrettyNiceOres.MOD_ID, oreDictType);
+        setRegistryName(Constants.MOD_ID, oreDictType);
         setUnlocalizedName(oreDictType);
         setCreativeTab(CreativeTabs.tabMaterials);
     }

@@ -1,5 +1,6 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
@@ -17,26 +18,27 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
+public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
-    public static final String NAME = "nice_coal_ore";
-    public static final String OREDICTTYPE = "oreCoal";
+    public static final String NAME = "nice_emerald_ore";
+    public static final String OREDICTTYPE = "oreEmerald";
     private static final int SMELTING_AMOUNT = 4;
 
-    public NiceCoalOre() {
+    public NiceEmeraldOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 0);
+        setLightLevel(2 / 15f);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.coal;
+        return Items.emerald;
     }
 
     @Override
     public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
-        return MathHelper.getRandomIntegerInRange(rand, 0, 2);
+        return MathHelper.getRandomIntegerInRange(rand, 3, 7);
     }
 
     @Override
@@ -51,11 +53,11 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.coal, SMELTING_AMOUNT);
+        return new ItemStack(Items.emerald, SMELTING_AMOUNT);
     }
 
     @Override
     public final float getSmeltingExp() {
-        return 2f;
+        return 4f;
     }
 }

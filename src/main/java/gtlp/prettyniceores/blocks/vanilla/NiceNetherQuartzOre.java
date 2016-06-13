@@ -1,11 +1,11 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -18,31 +18,31 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
+public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
-    public static final String NAME = "nice_lapis_ore";
-    public static final String OREDICTTYPE = "oreLapis";
+    public static final String NAME = "nice_netherquartz_ore";
+    public static final String OREDICTTYPE = "oreQuartz";
     private static final int SMELTING_AMOUNT = 4;
 
-    public NiceLapisOre() {
+    public NiceNetherQuartzOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.dye;
+        return Items.quartz;
     }
 
     @Override
     public final int getExpDrop(IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
-        return MathHelper.getRandomIntegerInRange(rand, 2, 5);
+        return MathHelper.getRandomIntegerInRange(rand, 1, 3);
     }
 
     @Override
-    public final int damageDropped(IBlockState state) {
-        return EnumDyeColor.BLUE.getDyeDamage();
+    public final int quantityDropped(IBlockState state, int fortune, Random random) {
+        return super.quantityDropped(state, fortune, random);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCom
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.dye, SMELTING_AMOUNT, EnumDyeColor.BLUE.getDyeDamage());
+        return new ItemStack(Items.quartz, SMELTING_AMOUNT);
     }
 
     @Override

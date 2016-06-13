@@ -1,5 +1,6 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
@@ -17,21 +18,21 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
+public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
-    public static final String NAME = "nice_emerald_ore";
-    public static final String OREDICTTYPE = "oreEmerald";
-    private static final int SMELTING_AMOUNT = 4;
+    public static final String NAME = "nice_diamond_ore";
+    public static final String OREDICTTYPE = "oreDiamond";
+    private static final int SMELTING_AMOUNT = 1;
 
-    public NiceEmeraldOre() {
+    public NiceDiamondOre() {
         super(NAME);
         setLightLevel(2 / 15f);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.emerald;
+        return Items.diamond;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictC
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.emerald, SMELTING_AMOUNT);
+        return new ItemStack(Items.diamond, SMELTING_AMOUNT);
     }
 
     @Override
