@@ -1,5 +1,6 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
@@ -27,7 +28,7 @@ public class NiceDiamondOre extends NiceOreBase implements ISmeltable, IOreDictC
     public NiceDiamondOre() {
         super(NAME);
         setLightLevel(2 / 15f);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override

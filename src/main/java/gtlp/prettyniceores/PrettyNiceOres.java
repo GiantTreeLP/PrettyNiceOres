@@ -1,6 +1,10 @@
 package gtlp.prettyniceores;
 
-import gtlp.prettyniceores.blocks.*;
+import gtlp.prettyniceores.blocks.modded.NiceCopperOre;
+import gtlp.prettyniceores.blocks.modded.NiceLeadOre;
+import gtlp.prettyniceores.blocks.modded.NiceSilverOre;
+import gtlp.prettyniceores.blocks.modded.NiceTinOre;
+import gtlp.prettyniceores.blocks.vanilla.*;
 import gtlp.prettyniceores.common.CommonProxy;
 import gtlp.prettyniceores.events.OnPlayerLoginEvent;
 import gtlp.prettyniceores.generators.NiceOresGenerator;
@@ -33,30 +37,30 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-@Mod(modid = PrettyNiceOres.MOD_ID,
-        version = PrettyNiceOres.VERSION,
+@Mod(modid = Constants.MOD_ID,
+        version = Constants.VERSION,
         canBeDeactivated = true,
-        name = "PrettyNiceOres",
-        updateJSON = PrettyNiceOres.UPDATE_URL,
-        dependencies = "after:neotech;after:tconstruct",
-        acceptedMinecraftVersions = "[1.9.4,)")
+        name = Constants.NAME,
+        updateJSON = Constants.UPDATE_URL,
+        dependencies = Constants.DEPENDENCIES,
+        acceptedMinecraftVersions = Constants.MC_VERSION)
+
 public class PrettyNiceOres {
-    public static final String MOD_ID = "prettyniceores";
-    public static final String VERSION = "1.9.4-0.3.5";
     public static final Map<String, Block> blockList = new HashMap<>();
     public static final Map<String, Item> itemList = new HashMap<>();
     public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static final String UPDATE_URL = "https://raw.githubusercontent.com/GiantTreeLP/PrettyNiceOres/1.9.4/versions.json";
-    final static Block[] modBlocks = {new NiceCopperOre()};
+    public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
+
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
+
     public List<IRecipe> recipeList = new ArrayList<>();
 
     /**
@@ -66,7 +70,7 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        RecipeSorter.register(MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
 
         addVanillaOres();
         addModOres();
@@ -121,13 +125,13 @@ public class PrettyNiceOres {
      * Adds all replacements for mod ores, if they have been created by any other mod.
      */
     private void addModOres() {
-        for (Block block : modBlocks) {
-            if (block instanceof IOreDictCompatible && block instanceof INamedBlock) {
-                if (OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType())) {
+        Block[] blockArray = {new NiceCopperOre(), new NiceTinOre(), new NiceSilverOre(), new NiceLeadOre()};
+
+        Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
+                .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
+                .forEach(block -> {
                     blockList.put(((INamedBlock) block).getName(), block);
-                }
-            }
-        }
+                });
     }
 
     private void addModItems() {

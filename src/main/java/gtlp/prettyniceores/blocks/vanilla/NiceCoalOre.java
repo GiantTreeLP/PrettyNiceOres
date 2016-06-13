@@ -1,11 +1,11 @@
-package gtlp.prettyniceores.blocks;
+package gtlp.prettyniceores.blocks.vanilla;
 
+import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -19,31 +19,26 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
+public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock {
 
-    public static final String NAME = "nice_lapis_ore";
-    public static final String OREDICTTYPE = "oreLapis";
+    public static final String NAME = "nice_coal_ore";
+    public static final String OREDICTTYPE = "oreCoal";
     private static final int SMELTING_AMOUNT = 4;
 
-    public NiceLapisOre() {
+    public NiceCoalOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.WOOD.getHarvestLevel());
     }
 
     @Override
     public final Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return Items.DYE;
+        return Items.COAL;
     }
 
     @Override
     public final int getExpDrop(@Nullable IBlockState state, IBlockAccess world, BlockPos pos, int fortune) {
         Random rand = world instanceof World ? ((World) world).rand : new Random();
-        return MathHelper.getRandomIntegerInRange(rand, 2, 5);
-    }
-
-    @Override
-    public final int damageDropped(IBlockState state) {
-        return EnumDyeColor.BLUE.getDyeDamage();
+        return MathHelper.getRandomIntegerInRange(rand, 0, 2);
     }
 
     @Override
@@ -58,7 +53,7 @@ public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCom
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.DYE, SMELTING_AMOUNT, EnumDyeColor.BLUE.getDyeDamage());
+        return new ItemStack(Items.COAL, SMELTING_AMOUNT);
     }
 
     @Override
