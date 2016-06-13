@@ -4,6 +4,7 @@ import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -17,7 +18,7 @@ public class NiceCopperOre extends NiceOreBase implements ISmeltable, IOreDictCo
 
     public NiceCopperOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 1);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
     }
 
     @Override

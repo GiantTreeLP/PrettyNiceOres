@@ -27,7 +27,7 @@ public class NiceEmeraldOre extends NiceOreBase implements ISmeltable, IOreDictC
     public NiceEmeraldOre() {
         super(NAME);
         setLightLevel(2 / 15f);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override

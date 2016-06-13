@@ -26,7 +26,7 @@ public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     public NiceCoalOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 0);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.WOOD.getHarvestLevel());
     }
 
     @Override

@@ -26,7 +26,7 @@ public class NiceNetherQuartzOre extends NiceOreBase implements ISmeltable, IOre
 
     public NiceNetherQuartzOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override

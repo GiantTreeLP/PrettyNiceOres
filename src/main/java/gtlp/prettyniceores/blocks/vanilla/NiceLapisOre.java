@@ -27,7 +27,7 @@ public class NiceLapisOre extends NiceOreBase implements ISmeltable, IOreDictCom
 
     public NiceLapisOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override

@@ -5,6 +5,7 @@ import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -17,7 +18,7 @@ public class NiceGoldOre extends NiceOreBase implements ISmeltable, IOreDictComp
 
     public NiceGoldOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 2);
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override
