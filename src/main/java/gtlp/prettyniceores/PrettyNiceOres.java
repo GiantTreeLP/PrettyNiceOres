@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
 
@@ -124,12 +125,9 @@ public class PrettyNiceOres {
      * Adds all replacements for mod ores, if they have been created by any other mod.
      */
     private void addModOres() {
-        List<Block> list = new ArrayList<>();
-        list.add(new NiceCopperOre());
-        list.add(new NiceTinOre());
-        list.add(new NiceSilverOre());
-        list.add(new NiceLeadOre());
-        list.stream().filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
+        Block[] blockArray = {new NiceCopperOre(), new NiceTinOre(), new NiceSilverOre(), new NiceLeadOre()};
+
+        Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
                 .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
                 .forEach(block -> {
                     blockList.put(((INamedBlock) block).getName(), block);
