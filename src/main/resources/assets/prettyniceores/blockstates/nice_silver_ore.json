@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "normal": [
+      {
+        "model": "prettyniceores:nice_silver_ore"
+      },
+      {
+        "model": "prettyniceores:nice_silver_ore",
+        "y": 90
+      },
+      {
+        "model": "prettyniceores:nice_silver_ore",
+        "y": 180
+      },
+      {
+        "model": "prettyniceores:nice_silver_ore",
+        "y": 270
+      }
+    ]
+  }
+}
