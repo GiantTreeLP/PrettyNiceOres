@@ -17,7 +17,7 @@ public class NiceTinOre extends NiceOreBase implements ISmeltable, IOreDictCompa
 
     public NiceTinOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", 1);
+        setHarvestLevel("pickaxe", 2);
     }
 
     @Override
