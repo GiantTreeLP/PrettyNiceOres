@@ -1,6 +1,6 @@
 package gtlp.prettyniceores.events;
 
-import gtlp.prettyniceores.PrettyNiceOres;
+import gtlp.prettyniceores.Constants;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -25,7 +25,7 @@ public class OnPlayerLoginEvent {
     public void versionCheck(EntityJoinWorldEvent event) {
         if (!notified && event.getEntity() instanceof EntityPlayer && event.getWorld().isRemote) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
-            Optional<ModContainer> modContainer = Loader.instance().getModList().stream().filter(container -> container.getModId().equals(PrettyNiceOres.MOD_ID)).findFirst();
+            Optional<ModContainer> modContainer = Loader.instance().getModList().stream().filter(container -> container.getModId().equals(Constants.MOD_ID)).findFirst();
             ForgeVersion.CheckResult checkResult = ForgeVersion.getResult(modContainer.get());
             if (checkResult.status == ForgeVersion.Status.OUTDATED) {
                 ITextComponent updateMsg = new TextComponentString(TextFormatting.GOLD.toString() + "A new version of " + TextFormatting.DARK_GREEN.toString() + "PrettyNiceOres" + TextFormatting.GOLD.toString() + " is out! Go grab it " + TextFormatting.BLUE.toString() + "here!");
