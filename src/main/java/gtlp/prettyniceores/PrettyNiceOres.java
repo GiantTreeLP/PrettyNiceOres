@@ -1,6 +1,7 @@
 package gtlp.prettyniceores;
 
 import gtlp.prettyniceores.blocks.modded.NiceCopperOre;
+import gtlp.prettyniceores.blocks.modded.NiceLeadOre;
 import gtlp.prettyniceores.blocks.modded.NiceSilverOre;
 import gtlp.prettyniceores.blocks.modded.NiceTinOre;
 import gtlp.prettyniceores.blocks.vanilla.*;
@@ -127,13 +128,12 @@ public class PrettyNiceOres {
         list.add(new NiceCopperOre());
         list.add(new NiceTinOre());
         list.add(new NiceSilverOre());
-        for (Block block : list) {
-            if (block instanceof IOreDictCompatible && block instanceof INamedBlock) {
-                if (OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType())) {
+        list.add(new NiceLeadOre());
+        list.stream().filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
+                .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
+                .forEach(block -> {
                     blockList.put(((INamedBlock) block).getName(), block);
-                }
-            }
-        }
+                });
     }
 
     private void addModItems() {
