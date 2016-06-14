@@ -8,7 +8,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -40,29 +39,5 @@ public class NiceOresGenerator implements IWorldGenerator {
                                         }))));
             }
         });
-    }
-
-    /**
-     * @param generator      The {@link WorldGenerator} to run
-     * @param world          The world the generator is run on
-     * @param rand           The random object to support constant seeds
-     * @param chunk_X        X-coordinate of the chunk
-     * @param chunk_Z        Z-coordinate of the chunk
-     * @param chancesToSpawn Amount of tries to run the generator per chunk
-     * @param minHeight      Minimum height fr the generator
-     * @param maxHeight      Maximum height for the generator
-     */
-    private void runGenerator(WorldGenerator generator, World world, Random rand, int chunk_X, int chunk_Z, int chancesToSpawn, int minHeight, int maxHeight) {
-        if (minHeight < 0 || maxHeight > MAX_HEIGHT || minHeight > maxHeight) {
-            throw new IllegalArgumentException("Illegal Height Arguments for WorldGenerator");
-        }
-
-        int heightDiff = maxHeight - minHeight + 1;
-        for (int i = 0; i < chancesToSpawn; i++) {
-            int x = chunk_X * CHUNK_SIZE + rand.nextInt(CHUNK_SIZE);
-            int y = minHeight + rand.nextInt(heightDiff);
-            int z = chunk_Z * CHUNK_SIZE + rand.nextInt(CHUNK_SIZE);
-            generator.generate(world, rand, new BlockPos(x, y, z));
-        }
     }
 }
