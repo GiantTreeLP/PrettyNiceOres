@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
-
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
@@ -70,7 +68,7 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         addVanillaOres();
         addModOres();
