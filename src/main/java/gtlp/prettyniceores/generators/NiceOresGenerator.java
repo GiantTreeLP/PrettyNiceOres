@@ -27,19 +27,15 @@ public class NiceOresGenerator implements IWorldGenerator {
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         Chunk chunk = chunkProvider.getLoadedChunk(chunkX, chunkZ);
         //Fairly quick nested loop to replace vanilla and ore dictionary ores with ours upon generation of a chunk.
-        //Parallel check.
-        //Synchronized replacement.
         PrettyNiceOres.blockList.entrySet().parallelStream().forEach(entry -> {
             if (entry.getValue() instanceof IOreDictCompatible) {
-                OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).parallelStream().filter(itemStack -> !itemStack.isItemEqual(new ItemStack(entry.getValue()))).forEach(itemStack ->
-                        IntStream.range(0, MAX_HEIGHT).parallel().forEach(y ->
-                                IntStream.range(0, CHUNK_SIZE).parallel().forEach(z ->
-                                        IntStream.range(0, CHUNK_SIZE).parallel().forEach(x -> {
+                OreDictionary.getOres(((IOreDictCompatible) entry.getValue()).getOreDictType()).stream().filter(itemStack -> !itemStack.isItemEqual(new ItemStack(entry.getValue()))).forEach(itemStack ->
+                        IntStream.range(0, MAX_HEIGHT).forEach(y ->
+                                IntStream.range(0, CHUNK_SIZE).forEach(z ->
+                                        IntStream.range(0, CHUNK_SIZE).forEach(x -> {
                                             BlockPos blockPos = new BlockPos(x, y, z);
                                             if (itemStack.isItemEqual(new ItemStack(chunk.getBlockState(blockPos).getBlock()))) {
-                                                synchronized (NiceOresGenerator.class) {
-                                                    chunk.setBlockState(blockPos, entry.getValue().getDefaultState());
-                                                }
+                                                chunk.setBlockState(blockPos, entry.getValue().getDefaultState());
                                             }
                                         }))));
             }
