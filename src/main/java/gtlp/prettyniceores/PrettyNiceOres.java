@@ -1,9 +1,6 @@
 package gtlp.prettyniceores;
 
-import gtlp.prettyniceores.blocks.modded.NiceCopperOre;
-import gtlp.prettyniceores.blocks.modded.NiceLeadOre;
-import gtlp.prettyniceores.blocks.modded.NiceSilverOre;
-import gtlp.prettyniceores.blocks.modded.NiceTinOre;
+import gtlp.prettyniceores.blocks.modded.*;
 import gtlp.prettyniceores.blocks.vanilla.*;
 import gtlp.prettyniceores.common.CommonProxy;
 import gtlp.prettyniceores.events.OnPlayerLoginEvent;
@@ -121,7 +118,11 @@ public class PrettyNiceOres {
      * Adds all replacements for mod ores, if they have been created by any other mod.
      */
     private void addModOres() {
-        Block[] blockArray = {new NiceCopperOre(), new NiceTinOre(), new NiceSilverOre(), new NiceLeadOre()};
+        Block[] blockArray = {new NiceCopperOre(),
+                              new NiceTinOre(),
+                              new NiceSilverOre(),
+                              new NiceLeadOre(),
+                              new NiceNickelOre()};
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
                 .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
