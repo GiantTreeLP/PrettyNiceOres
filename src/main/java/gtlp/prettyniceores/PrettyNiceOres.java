@@ -173,7 +173,7 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Integer.MAX_VALUE);
+        GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Short.MAX_VALUE);
         LOGGER.info("PostInit done.");
     }
 }
