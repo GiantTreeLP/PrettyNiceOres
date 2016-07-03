@@ -1,9 +1,6 @@
 package gtlp.prettyniceores;
 
-import gtlp.prettyniceores.blocks.modded.NiceCopperOre;
-import gtlp.prettyniceores.blocks.modded.NiceLeadOre;
-import gtlp.prettyniceores.blocks.modded.NiceSilverOre;
-import gtlp.prettyniceores.blocks.modded.NiceTinOre;
+import gtlp.prettyniceores.blocks.modded.*;
 import gtlp.prettyniceores.blocks.vanilla.*;
 import gtlp.prettyniceores.common.CommonProxy;
 import gtlp.prettyniceores.events.OnPlayerLoginEvent;
@@ -39,8 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static net.minecraftforge.oredict.RecipeSorter.Category.SHAPELESS;
-
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
@@ -70,12 +65,10 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         addVanillaOres();
         addModOres();
-
-        addModItems();
 
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
@@ -125,16 +118,17 @@ public class PrettyNiceOres {
      * Adds all replacements for mod ores, if they have been created by any other mod.
      */
     private void addModOres() {
-        Block[] blockArray = {new NiceCopperOre(), new NiceTinOre(), new NiceSilverOre(), new NiceLeadOre()};
+        Block[] blockArray = {new NiceCopperOre(),
+                              new NiceTinOre(),
+                              new NiceSilverOre(),
+                              new NiceLeadOre(),
+                              new NiceNickelOre()};
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
                 .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
                 .forEach(block -> {
                     blockList.put(((INamedBlock) block).getName(), block);
                 });
-    }
-
-    private void addModItems() {
     }
 
     /**
@@ -146,12 +140,12 @@ public class PrettyNiceOres {
     public void init(FMLInitializationEvent event) {
         itemList.forEach((name, item) -> {
             if (event.getSide().isClient()) {
-                registerItemRenderer(item);
+                registerItemRenderer(item, 0);
             }
         });
         itemBlockList.forEach((name, item) -> {
             if (event.getSide().isClient()) {
-                registerItemRenderer(item);
+                registerItemRenderer(item, 0);
             }
         });
         blockList.entrySet().stream().filter(entry -> entry.getValue() instanceof IOreDictCompatible).forEach(entry -> {
@@ -168,8 +162,8 @@ public class PrettyNiceOres {
      * @param item to register the item renderer for
      */
     @SideOnly(Side.CLIENT)
-    public static void registerItemRenderer(Item item) {
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+    public static void registerItemRenderer(Item item, int meta) {
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
     /**
@@ -179,7 +173,7 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Integer.MAX_VALUE);
+        GameRegistry.registerWorldGenerator(new NiceOresGenerator(), Short.MAX_VALUE);
         LOGGER.info("PostInit done.");
     }
 }
