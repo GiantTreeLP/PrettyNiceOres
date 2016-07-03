@@ -80,7 +80,7 @@ public abstract class NiceOreBase extends BlockOre {
                     stopWatch.start();
                     getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player, itemMainhand, blocks);
                     stopWatch.stop();
-                    PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ms", blocks.get(), stopWatch.getSplitTime());
+                    PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ms", blocks.get(), stopWatch.getTime());
                     itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                 }
             }
