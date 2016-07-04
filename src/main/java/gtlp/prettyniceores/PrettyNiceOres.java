@@ -48,15 +48,27 @@ import java.util.stream.Stream;
         acceptedMinecraftVersions = Constants.MC_VERSION)
 
 public class PrettyNiceOres {
-    public static final Map<String, Block> blockList = new HashMap<>();
-    public static final Map<String, Item> itemList = new HashMap<>();
-    public static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
-
+    private static final Map<String, Block> blockList = new HashMap<>();
+    private static final Map<String, Item> itemList = new HashMap<>();
+    private static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
+    private List<IRecipe> recipeList = new ArrayList<>();
 
-    public List<IRecipe> recipeList = new ArrayList<>();
+    public static Map<String, Block> getBlockList() {
+        return blockList;
+    }
+
+    /**
+     * Registers a default item renderer for the inventory
+     *
+     * @param item to register the item renderer for
+     */
+    @SideOnly(Side.CLIENT)
+    private static void registerItemRenderer(Item item, int meta) {
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+    }
 
     /**
      * Preinitialization of the mod.
@@ -119,16 +131,14 @@ public class PrettyNiceOres {
      */
     private void addModOres() {
         Block[] blockArray = {new NiceCopperOre(),
-                              new NiceTinOre(),
-                              new NiceSilverOre(),
-                              new NiceLeadOre(),
-                              new NiceNickelOre()};
+                new NiceTinOre(),
+                new NiceSilverOre(),
+                new NiceLeadOre(),
+                new NiceNickelOre()};
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
                 .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
-                .forEach(block -> {
-                    blockList.put(((INamedBlock) block).getName(), block);
-                });
+                .forEach(block -> blockList.put(((INamedBlock) block).getName(), block));
     }
 
     /**
@@ -154,16 +164,6 @@ public class PrettyNiceOres {
         });
 
         LOGGER.info("Init done.");
-    }
-
-    /**
-     * Registers a default item renderer for the inventory
-     *
-     * @param item to register the item renderer for
-     */
-    @SideOnly(Side.CLIENT)
-    public static void registerItemRenderer(Item item, int meta) {
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
     /**
