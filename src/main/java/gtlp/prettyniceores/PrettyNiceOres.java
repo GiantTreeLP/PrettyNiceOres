@@ -134,7 +134,9 @@ public class PrettyNiceOres {
                 new NiceTinOre(),
                 new NiceSilverOre(),
                 new NiceLeadOre(),
-                new NiceNickelOre()};
+                new NiceNickelOre(),
+                new NicePlatinumOre(),
+        };
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
                 .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
