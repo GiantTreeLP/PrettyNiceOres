@@ -41,7 +41,6 @@ import java.util.stream.Stream;
  */
 @Mod(modid = Constants.MOD_ID,
         version = Constants.VERSION,
-        canBeDeactivated = true,
         name = Constants.NAME,
         updateJSON = Constants.UPDATE_URL,
         dependencies = Constants.DEPENDENCIES,
