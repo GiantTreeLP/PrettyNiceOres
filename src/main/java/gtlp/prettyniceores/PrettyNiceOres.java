@@ -41,7 +41,6 @@ import java.util.stream.Stream;
  */
 @Mod(modid = Constants.MOD_ID,
         version = Constants.VERSION,
-        canBeDeactivated = true,
         name = Constants.NAME,
         updateJSON = Constants.UPDATE_URL,
         dependencies = Constants.DEPENDENCIES,
@@ -134,7 +133,11 @@ public class PrettyNiceOres {
                 new NiceTinOre(),
                 new NiceSilverOre(),
                 new NiceLeadOre(),
-                new NiceNickelOre()};
+                new NiceNickelOre(),
+                new NicePlatinumOre(),
+                new NiceZincOre(),
+                new NiceMercuryOre(),
+        };
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
                 .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
