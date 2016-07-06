@@ -137,6 +137,7 @@ public class PrettyNiceOres {
                 new NiceNickelOre(),
                 new NicePlatinumOre(),
                 new NiceZincOre(),
+                new NiceMercuryOre(),
         };
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
