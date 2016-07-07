@@ -28,7 +28,7 @@ public class NiceOresGenerator implements IWorldGenerator {
     private final ConcurrentHashMap<Block, Block> replacementMap = new ConcurrentHashMap<>();
 
     public NiceOresGenerator() {
-        PrettyNiceOres.blockList.entrySet().stream().filter(entry -> entry.getValue() instanceof IOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> {
+        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof IOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> {
             OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
                 if (stack.getItem() instanceof ItemBlock) {
                     replacementMap.put(((ItemBlock) stack.getItem()).block, niceOre.getValue());

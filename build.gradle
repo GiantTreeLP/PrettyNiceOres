@@ -18,6 +18,7 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
         classpath 'org.standardout:gradle-versioneye-plugin:1.5.0-SNAPSHOT'
+        classpath 'com.brsanthu:google-analytics-java:1.1.2'
     }
 }
 
@@ -35,12 +36,12 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.9.4-0.3.6"
+version = "1.10.2-0.4.0"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
 minecraft {
-    version = "1.9.4-12.17.0.1976"
+    version = "1.10.2-12.18.0.2007-1.10.0"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
