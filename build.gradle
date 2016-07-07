@@ -35,7 +35,7 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.9-0.3.6"
+version = "1.9-0.4.0"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
@@ -75,25 +75,24 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 }
 
-processResources
-        {
-            // this will ensure that this task is redone when the versions change.
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
 
-            // replace stuff in mcmod.info, nothing else
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
 
-                // replace version and mcversion
-                expand 'version': project.version, 'mcversion': project.minecraft.version
-            }
+        // replace version and mcversion
+        expand 'version': project.version, 'mcversion': project.minecraft.version
+    }
 
-            // copy everything else, thats not the mcmod.info
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
 
 curseforge {
     apiKey = project.hasProperty("curseapitoken") ? project.getProperty("curseapitoken") : ""
@@ -104,4 +103,10 @@ curseforge {
 
         mainArtifact jar
     }
+}
+
+minecraft {
+    replaceIn "Constants.java"
+    replace "\${version}", project.version
+    replace "\${mcversion}", project.minecraft.version
 }

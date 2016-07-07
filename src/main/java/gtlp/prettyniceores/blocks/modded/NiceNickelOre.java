@@ -12,19 +12,19 @@ import net.minecraftforge.oredict.OreDictionary;
 /**
  * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
  */
-public class NiceLeadOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, IOre {
+public class NiceNickelOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, IOre {
 
-    public static final String NAME = "nice_lead_ore";
-    public static final String OREDICTTYPE = "oreLead";
+    public static final String NAME = "nice_nickel_ore";
+    public static final String OREDICTTYPE = "oreNickel";
 
-    public NiceLeadOre() {
+    public NiceNickelOre() {
         super(NAME);
         setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
     }
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return OreDictionary.getOres("ingotLead").get(0);
+        return OreDictionary.getOres("ingotNickel").get(0);
     }
 
     @Override

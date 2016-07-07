@@ -10,26 +10,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
- * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
+ * Created by Marv1 on 09.06.2016.
  */
-public class NiceLeadOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, IOre {
+public class NicePlatinumOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, IOre {
 
-    public static final String NAME = "nice_lead_ore";
-    public static final String OREDICTTYPE = "oreLead";
+    public static final String NAME = "nice_platinum_ore";
+    public static final String OREDICTTYPE = "orePlatinum";
 
-    public NiceLeadOre() {
+    public NicePlatinumOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
+        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return OreDictionary.getOres("ingotLead").get(0);
+        return OreDictionary.getOres("ingotPlatinum").get(0);
     }
 
     @Override
     public final float getSmeltingExp() {
-        return 2f;
+        return 3f;
     }
 
     @Override
