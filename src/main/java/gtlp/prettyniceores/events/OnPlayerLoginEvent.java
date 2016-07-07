@@ -19,14 +19,14 @@ import java.util.Optional;
  */
 public class OnPlayerLoginEvent {
 
-    boolean notified = false;
+    private boolean notified = false;
 
     @SubscribeEvent
     public void versionCheck(EntityJoinWorldEvent event) {
         if (!notified && event.getEntity() instanceof EntityPlayer && event.getWorld().isRemote) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             Optional<ModContainer> modContainer = Loader.instance().getModList().stream().filter(container -> container.getModId().equals(Constants.MOD_ID)).findFirst();
-            ForgeVersion.CheckResult checkResult = ForgeVersion.getResult(modContainer.get());
+            ForgeVersion.CheckResult checkResult = ForgeVersion.getResult(modContainer.isPresent() ? modContainer.get() : null);
             if (checkResult.status == ForgeVersion.Status.OUTDATED) {
                 ITextComponent updateMsg = new TextComponentString(TextFormatting.GOLD.toString() + "A new version of " + TextFormatting.DARK_GREEN.toString() + "PrettyNiceOres" + TextFormatting.GOLD.toString() + " is out! Go grab it " + TextFormatting.BLUE.toString() + "here!");
                 ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.OPEN_URL, checkResult.url);
