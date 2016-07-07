@@ -9,11 +9,13 @@ import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
+import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -69,6 +71,24 @@ public class PrettyNiceOres {
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
+    private static void addSmeltingRecipe(Item item) {
+        if (item instanceof ISmeltable) {
+            ItemStack result = ((ISmeltable) item).getSmeltingResult();
+            if (result != null) {
+                GameRegistry.addSmelting(item, result, ((ISmeltable) item).getSmeltingExp());
+            }
+        }
+    }
+
+    private static void addSmeltingRecipe(Block block) {
+        if (block instanceof ISmeltable) {
+            ItemStack result = ((ISmeltable) block).getSmeltingResult();
+            if (result != null) {
+                GameRegistry.addSmelting(block, result, ((ISmeltable) block).getSmeltingExp());
+            }
+        }
+    }
+
     /**
      * Preinitialization of the mod.
      *
@@ -93,18 +113,14 @@ public class PrettyNiceOres {
             if (block instanceof IOreDictCompatible) {
                 OreDictionary.registerOre(((IOreDictCompatible) block).getOreDictType(), item);
             }
-            if (block instanceof ISmeltable) {
-                GameRegistry.addSmelting(item, ((ISmeltable) block).getSmeltingResult(), (((ISmeltable) block).getSmeltingExp()));
-            }
+            addSmeltingRecipe(block);
         });
         itemList.forEach((name, item) -> {
             GameRegistry.register(item);
             if (item instanceof IOreDictCompatible) {
                 OreDictionary.registerOre(((IOreDictCompatible) item).getOreDictType(), item);
             }
-            if (item instanceof ISmeltable) {
-                GameRegistry.addSmelting(item, ((ISmeltable) item).getSmeltingResult(), ((ISmeltable) item).getSmeltingExp());
-            }
+            addSmeltingRecipe(item);
         });
         recipeList.forEach(GameRegistry::addRecipe);
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
@@ -165,7 +181,10 @@ public class PrettyNiceOres {
         });
         blockList.entrySet().stream().filter(entry -> entry.getValue() instanceof IOreDictCompatible).forEach(entry -> {
             IOreDictCompatible block = (IOreDictCompatible) entry.getValue();
-            GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionary.getOres(block.getOreDictType()).get(0), block));
+            ItemStack result = OreDictUtils.getFirstOre(block.getOreDictType());
+            if (result != null) {
+                GameRegistry.addRecipe(new ShapelessOreRecipe(result, block));
+            }
         });
 
         LOGGER.info("Init done.");
