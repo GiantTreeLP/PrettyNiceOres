@@ -34,6 +34,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +57,7 @@ public class PrettyNiceOres {
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(Constants.MOD_ID) {
         @SideOnly(Side.CLIENT)
         @Override
+        @Nonnull
         public Item getTabIconItem() {
             return ItemBlock.getItemFromBlock(Blocks.DIAMOND_ORE);
         }
