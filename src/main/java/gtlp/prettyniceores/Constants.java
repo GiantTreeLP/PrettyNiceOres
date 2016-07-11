@@ -9,7 +9,7 @@ public final class Constants {
     public static final String VERSION = "${version}";
     public static final String UPDATE_URL = "https://raw.githubusercontent.com/GiantTreeLP/PrettyNiceOres/1.9.4/versions.json";
     public static final String NAME = "PrettyNiceOres";
-    public static final String DEPENDENCIES = "after:neotech;after:tconstruct;after:basemetals";
+    public static final String DEPENDENCIES = "after:neotech;after:tconstruct;after:basemetals;after:substratum";
     protected static final String MC_VERSION = "[${mcversion},)";
 
     private Constants() {
