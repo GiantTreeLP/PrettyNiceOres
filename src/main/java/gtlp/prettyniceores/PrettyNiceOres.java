@@ -122,7 +122,6 @@ public class PrettyNiceOres {
             }
             addSmeltingRecipe(item);
         });
-        recipeList.forEach(GameRegistry::addRecipe);
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
         LOGGER.info("PreInit done.");
     }
@@ -145,7 +144,8 @@ public class PrettyNiceOres {
      * Adds all replacements for mod ores, if they have been created by any other mod.
      */
     private void addModOres() {
-        Block[] blockArray = {new NiceCopperOre(),
+        Block[] blockArray = {
+                new NiceCopperOre(),
                 new NiceTinOre(),
                 new NiceSilverOre(),
                 new NiceLeadOre(),
@@ -186,6 +186,7 @@ public class PrettyNiceOres {
                 GameRegistry.addRecipe(new ShapelessOreRecipe(result, block));
             }
         });
+        recipeList.forEach(GameRegistry::addRecipe);
 
         LOGGER.info("Init done.");
     }
