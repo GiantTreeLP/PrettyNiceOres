@@ -52,6 +52,7 @@ import java.util.stream.Stream;
 
 public class PrettyNiceOres {
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
+
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(Constants.MOD_ID) {
         @SideOnly(Side.CLIENT)
         @Override
@@ -59,12 +60,15 @@ public class PrettyNiceOres {
             return ItemBlock.getItemFromBlock(Blocks.DIAMOND_ORE);
         }
     };
+
     private static final Map<String, Block> blockList = new HashMap<>();
     private static final Map<String, Item> itemList = new HashMap<>();
     private static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
+    private static final List<IRecipe> recipeList = new ArrayList<>();
+
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
-    private List<IRecipe> recipeList = new ArrayList<>();
+
 
     public static Map<String, Block> getBlockList() {
         return blockList;
