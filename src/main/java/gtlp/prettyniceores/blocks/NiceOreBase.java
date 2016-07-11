@@ -46,6 +46,7 @@ public abstract class NiceOreBase extends BlockOre {
         setUnlocalizedName(name);
         setDefaultState(blockState.getBaseState());
         setHardness(HARDNESS);
+        setCreativeTab(PrettyNiceOres.CREATIVE_TAB);
     }
 
     /**

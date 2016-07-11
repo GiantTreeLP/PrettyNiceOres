@@ -13,6 +13,8 @@ import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -50,6 +52,13 @@ import java.util.stream.Stream;
 
 public class PrettyNiceOres {
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(Constants.MOD_ID) {
+        @SideOnly(Side.CLIENT)
+        @Override
+        public Item getTabIconItem() {
+            return ItemBlock.getItemFromBlock(Blocks.DIAMOND_ORE);
+        }
+    };
     private static final Map<String, Block> blockList = new HashMap<>();
     private static final Map<String, Item> itemList = new HashMap<>();
     private static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
@@ -122,6 +131,7 @@ public class PrettyNiceOres {
             }
             addSmeltingRecipe(item);
         });
+
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
         LOGGER.info("PreInit done.");
     }
