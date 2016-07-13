@@ -35,12 +35,12 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.9.4-0.4.0"
+version = "1.9.4-0.4.1"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
 minecraft {
-    version = "1.9.4-12.17.0.1976"
+    version = "1.9.4-12.17.0.1987"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.

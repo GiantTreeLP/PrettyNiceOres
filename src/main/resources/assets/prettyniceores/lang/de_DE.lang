@@ -1,0 +1,17 @@
+tile.nice_iron_ore.name=Nettes Eisenerz
+tile.nice_gold_ore.name=Nettes Golderz
+tile.nice_coal_ore.name=Nettes Kohleerz
+tile.nice_lapis_ore.name=Nettes Lapiserz
+tile.nice_diamond_ore.name=Nettes Diamanterz
+tile.nice_emerald_ore.name=Nettes Smaragderz
+tile.nice_redstone_ore.name=Nettes Redstoneerz
+tile.nice_copper_ore.name=Nettes Kupfererz
+tile.nice_netherquartz_ore.name=Nettes Netherquartzerz
+tile.nice_tin_ore.name=Nettes Zinnerz
+tile.nice_silver_ore.name=Nettes Silbererz
+tile.nice_lead_ore.name=Nettes Bleierz
+tile.nice_nickel_ore.name=Nettes Nickelerz
+tile.nice_platinum_ore.name=Nettes Platinerz
+tile.nice_zinc_ore.name=Nettes Zinkerz
+tile.nice_mercury_ore.name=Nettes Quecksilbererz
+itemGroup.prettyniceores=Nette Erze

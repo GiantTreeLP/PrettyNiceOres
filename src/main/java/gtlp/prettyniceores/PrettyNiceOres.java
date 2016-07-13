@@ -9,11 +9,15 @@ import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
+import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -30,6 +34,7 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,12 +53,24 @@ import java.util.stream.Stream;
 
 public class PrettyNiceOres {
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
+
+    public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(Constants.MOD_ID) {
+        @SideOnly(Side.CLIENT)
+        @Override
+        @Nonnull
+        public Item getTabIconItem() {
+            return ItemBlock.getItemFromBlock(Blocks.DIAMOND_ORE);
+        }
+    };
+
     private static final Map<String, Block> blockList = new HashMap<>();
     private static final Map<String, Item> itemList = new HashMap<>();
     private static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
+    private static final List<IRecipe> recipeList = new ArrayList<>();
+
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
-    private List<IRecipe> recipeList = new ArrayList<>();
+
 
     public static Map<String, Block> getBlockList() {
         return blockList;
@@ -67,6 +84,24 @@ public class PrettyNiceOres {
     @SideOnly(Side.CLIENT)
     private static void registerItemRenderer(Item item, int meta) {
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+    }
+
+    private static void addSmeltingRecipe(Item item) {
+        if (item instanceof ISmeltable) {
+            ItemStack result = ((ISmeltable) item).getSmeltingResult();
+            if (result != null) {
+                GameRegistry.addSmelting(item, result, ((ISmeltable) item).getSmeltingExp());
+            }
+        }
+    }
+
+    private static void addSmeltingRecipe(Block block) {
+        if (block instanceof ISmeltable) {
+            ItemStack result = ((ISmeltable) block).getSmeltingResult();
+            if (result != null) {
+                GameRegistry.addSmelting(block, result, ((ISmeltable) block).getSmeltingExp());
+            }
+        }
     }
 
     /**
@@ -93,20 +128,15 @@ public class PrettyNiceOres {
             if (block instanceof IOreDictCompatible) {
                 OreDictionary.registerOre(((IOreDictCompatible) block).getOreDictType(), item);
             }
-            if (block instanceof ISmeltable) {
-                GameRegistry.addSmelting(item, ((ISmeltable) block).getSmeltingResult(), (((ISmeltable) block).getSmeltingExp()));
-            }
+            addSmeltingRecipe(block);
         });
         itemList.forEach((name, item) -> {
             GameRegistry.register(item);
             if (item instanceof IOreDictCompatible) {
                 OreDictionary.registerOre(((IOreDictCompatible) item).getOreDictType(), item);
             }
-            if (item instanceof ISmeltable) {
-                GameRegistry.addSmelting(item, ((ISmeltable) item).getSmeltingResult(), ((ISmeltable) item).getSmeltingExp());
-            }
+            addSmeltingRecipe(item);
         });
-        recipeList.forEach(GameRegistry::addRecipe);
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
         LOGGER.info("PreInit done.");
     }
@@ -129,7 +159,8 @@ public class PrettyNiceOres {
      * Adds all replacements for mod ores, if they have been created by any other mod.
      */
     private void addModOres() {
-        Block[] blockArray = {new NiceCopperOre(),
+        Block[] blockArray = {
+                new NiceCopperOre(),
                 new NiceTinOre(),
                 new NiceSilverOre(),
                 new NiceLeadOre(),
@@ -165,9 +196,14 @@ public class PrettyNiceOres {
         });
         blockList.entrySet().stream().filter(entry -> entry.getValue() instanceof IOreDictCompatible).forEach(entry -> {
             IOreDictCompatible block = (IOreDictCompatible) entry.getValue();
-            GameRegistry.addRecipe(new ShapelessOreRecipe(OreDictionary.getOres(block.getOreDictType()).get(0), block));
+            ItemStack result = OreDictUtils.getFirstOre(block.getOreDictType());
+            if (result != null) {
+                GameRegistry.addRecipe(new ShapelessOreRecipe(result, block));
+            }
         });
+        recipeList.forEach(GameRegistry::addRecipe);
 
+        recipeList.forEach(GameRegistry::addRecipe);
         LOGGER.info("Init done.");
     }
 
