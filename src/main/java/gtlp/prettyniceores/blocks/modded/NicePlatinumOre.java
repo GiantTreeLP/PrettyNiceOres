@@ -5,9 +5,9 @@ import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
+import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Marv1 on 09.06.2016.
@@ -24,7 +24,7 @@ public class NicePlatinumOre extends NiceOreBase implements ISmeltable, IOreDict
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return OreDictionary.getOres("ingotPlatinum").get(0);
+        return OreDictUtils.getFirstOre("ingotPlatinum");
     }
 
     @Override

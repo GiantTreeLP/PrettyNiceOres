@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -43,14 +44,19 @@ public class NiceOresGenerator implements IWorldGenerator {
         //Fairly quick nested loop to replace vanilla and ore dictionary ores with ours upon generation of a chunk.
         Stream.of(chunk.getBlockStorageArray()).filter(blockStorage -> blockStorage != null).parallel().forEach(blockStorage ->
                 IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(y ->
-                        IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(z ->
-                                IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(x -> {
-                                    IBlockState state = blockStorage.get(x, y, z);
-                                    if (replacementMap.containsKey(state.getBlock())) {
-                                        synchronized (this) {
-                                            blockStorage.getData().set(x, y, z, replacementMap.get(state.getBlock()).getDefaultState());
-                                        }
-                                    }
-                                }))));
+                        IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(z -> {
+                            IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(x -> {
+                                IBlockState state = blockStorage.get(x, y, z);
+                                if (replacementMap.containsKey(state.getBlock())) {
+                                    setBlock(blockStorage, y, z, x, replacementMap.get(state.getBlock()).getDefaultState());
+                                }
+                            });
+                        })));
+    }
+
+    private synchronized void setBlock(ExtendedBlockStorage blockStorage, int y, int z, int x, IBlockState state) {
+        synchronized (this) {
+            blockStorage.getData().set(x, y, z, state);
+        }
     }
 }
