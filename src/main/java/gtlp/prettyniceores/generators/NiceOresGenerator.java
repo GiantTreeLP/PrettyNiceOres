@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Random;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -26,7 +26,7 @@ public class NiceOresGenerator implements IWorldGenerator {
 
     //Size of storage array (cube with indices 0 to 15, ie. 16)
     private static final int STORAGE_ARRAY_SIZE = 16;
-    private final ConcurrentSkipListMap<ItemStackHolder, IBlockState> replacementMap = new ConcurrentSkipListMap<>();
+    private final ConcurrentHashMap<ItemStackHolder, IBlockState> replacementMap = new ConcurrentHashMap<>();
 
     public NiceOresGenerator() {
         PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> {

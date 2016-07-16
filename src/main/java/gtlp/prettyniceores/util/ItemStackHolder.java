@@ -72,6 +72,9 @@ public class ItemStackHolder implements Comparable {
 
     @Override
     public int hashCode() {
+        if (getItemStack().getItem() == null) {
+            return 0;
+        }
         return Arrays.deepHashCode(new Object[]{Item.getIdFromItem(getItemStack().getItem()), getItemStack().getMetadata(), getItemStack().getEnchantmentTagList(), getItemStack().getItemDamage()});
     }
 
