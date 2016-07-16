@@ -160,7 +160,8 @@ public class PrettyNiceOres {
      * Adds items.
      */
     private void addItems() {
-        if (System.getenv("pno_debug").equals("true")) {
+        String debugString = System.getenv("pno_debug");
+        if (debugString != null && debugString.equals("true")) {
             itemList.put(DebugAndTestingItem.NAME, new DebugAndTestingItem());
         }
     }
