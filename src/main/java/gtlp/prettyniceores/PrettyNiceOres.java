@@ -8,6 +8,7 @@ import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
+import gtlp.prettyniceores.items.DebugAndTestingItem;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
 import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.block.Block;
@@ -127,6 +128,8 @@ public class PrettyNiceOres {
         addVanillaOres();
         addModOres();
 
+        addItems();
+
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
             itemBlock.setRegistryName(block.getRegistryName());
@@ -151,6 +154,15 @@ public class PrettyNiceOres {
 
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
         LOGGER.info("PreInit done.");
+    }
+
+    /**
+     * Adds items.
+     */
+    private void addItems() {
+        if (System.getenv("pno_debug").equals("true")) {
+            itemList.put(DebugAndTestingItem.NAME, new DebugAndTestingItem());
+        }
     }
 
     /**
@@ -198,7 +210,6 @@ public class PrettyNiceOres {
     public void init(FMLInitializationEvent event) {
         itemList.forEach((name, item) -> {
             if (event.getSide().isClient()) {
-                registerItemRenderer(item, 0);
             }
         });
         itemBlockList.forEach((name, item) -> {
