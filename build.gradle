@@ -18,7 +18,6 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
         classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.0.7"
         classpath 'org.standardout:gradle-versioneye-plugin:1.5.0-SNAPSHOT'
-        classpath 'com.brsanthu:google-analytics-java:1.1.2'
     }
 }
 
@@ -36,7 +35,7 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.10.2-0.4.1"
+version = "1.10.2-0.4.2"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
@@ -74,6 +73,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    compile 'junit:junit:4.12'
 }
 
 processResources {

@@ -2,7 +2,7 @@ package gtlp.prettyniceores.blocks.modded;
 
 import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
-import gtlp.prettyniceores.interfaces.IOre;
+import gtlp.prettyniceores.interfaces.INiceOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import gtlp.prettyniceores.util.OreDictUtils;
@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
  */
-public class NiceZincOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, IOre {
+public class NiceZincOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
     public static final String NAME = "nice_zinc_ore";
     public static final String OREDICTTYPE = "oreZinc";
