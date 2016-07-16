@@ -15,3 +15,4 @@ tile.nice_platinum_ore.name=Nettes Platinerz
 tile.nice_zinc_ore.name=Nettes Zinkerz
 tile.nice_mercury_ore.name=Nettes Quecksilbererz
 itemGroup.prettyniceores=Nette Erze
+item.pno_debugItem.name=Debuggegenstand

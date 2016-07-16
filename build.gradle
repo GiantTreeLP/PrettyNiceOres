@@ -35,7 +35,7 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.9.4-0.4.1"
+version = "1.9.4-0.4.2"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
@@ -73,6 +73,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    compile 'junit:junit:4.12'
 }
 
 processResources {

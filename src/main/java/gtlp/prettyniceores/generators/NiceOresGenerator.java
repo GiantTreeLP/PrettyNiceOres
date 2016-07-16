@@ -1,9 +1,9 @@
 package gtlp.prettyniceores.generators;
 
 import gtlp.prettyniceores.PrettyNiceOres;
-import gtlp.prettyniceores.interfaces.IOre;
+import gtlp.prettyniceores.interfaces.INiceOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
-import net.minecraft.block.Block;
+import gtlp.prettyniceores.util.ItemStackHolder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.world.World;
@@ -26,13 +26,13 @@ public class NiceOresGenerator implements IWorldGenerator {
 
     //Size of storage array (cube with indices 0 to 15, ie. 16)
     private static final int STORAGE_ARRAY_SIZE = 16;
-    private final ConcurrentHashMap<Block, Block> replacementMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<ItemStackHolder, IBlockState> replacementMap = new ConcurrentHashMap<>();
 
     public NiceOresGenerator() {
-        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof IOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> {
+        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> {
             OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
-                if (stack.getItem() instanceof ItemBlock) {
-                    replacementMap.put(((ItemBlock) stack.getItem()).block, niceOre.getValue());
+                if (stack.getItem() instanceof ItemBlock && !(stack.getItem() instanceof INiceOre)) {
+                    replacementMap.put(new ItemStackHolder(stack), niceOre.getValue().getDefaultState());
                 }
             });
         });
@@ -47,14 +47,24 @@ public class NiceOresGenerator implements IWorldGenerator {
                         IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(z -> {
                             IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(x -> {
                                 IBlockState state = blockStorage.get(x, y, z);
-                                if (replacementMap.containsKey(state.getBlock())) {
-                                    setBlock(blockStorage, y, z, x, replacementMap.get(state.getBlock()).getDefaultState());
+                                ItemStackHolder key = new ItemStackHolder(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+                                if (replacementMap.containsKey(key)) {
+                                    setBlock(blockStorage, x, y, z, replacementMap.get(key));
                                 }
                             });
                         })));
     }
 
-    private synchronized void setBlock(ExtendedBlockStorage blockStorage, int y, int z, int x, IBlockState state) {
+    /**
+     * Synchronously sets a block state in the given {@link ExtendedBlockStorage} at the location x, y, z to the given {@link IBlockState}
+     *
+     * @param blockStorage the part of the chunk to manipulate
+     * @param x            the local x coordinate
+     * @param y            the local y coordinate
+     * @param z            the local z coordinate
+     * @param state        the state to set at the desired location
+     */
+    private synchronized void setBlock(ExtendedBlockStorage blockStorage, int x, int y, int z, IBlockState state) {
         synchronized (this) {
             blockStorage.getData().set(x, y, z, state);
         }
