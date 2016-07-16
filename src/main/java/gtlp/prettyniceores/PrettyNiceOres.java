@@ -87,6 +87,11 @@ public class PrettyNiceOres {
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
+    /**
+     * Adds a smelting recipe for the given {@link Item}, if the item is an {@link ISmeltable} (takes all items, though)
+     *
+     * @param item to register the smelting recipe for
+     */
     private static void addSmeltingRecipe(Item item) {
         if (item instanceof ISmeltable) {
             ItemStack result = ((ISmeltable) item).getSmeltingResult();
@@ -96,6 +101,11 @@ public class PrettyNiceOres {
         }
     }
 
+    /**
+     * Adds a smelting recipe for the given {@link Block}, if the item is an {@link ISmeltable} (takes all blocks, though)
+     *
+     * @param block to register the smelting recipe for
+     */
     private static void addSmeltingRecipe(Block block) {
         if (block instanceof ISmeltable) {
             ItemStack result = ((ISmeltable) block).getSmeltingResult();

@@ -49,13 +49,22 @@ public class NiceOresGenerator implements IWorldGenerator {
                                 IBlockState state = blockStorage.get(x, y, z);
                                 ItemStackHolder key = new ItemStackHolder(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
                                 if (replacementMap.containsKey(key)) {
-                                    setBlock(blockStorage, y, z, x, replacementMap.get(key));
+                                    setBlock(blockStorage, x, y, z, replacementMap.get(key));
                                 }
                             });
                         })));
     }
 
-    private synchronized void setBlock(ExtendedBlockStorage blockStorage, int y, int z, int x, IBlockState state) {
+    /**
+     * Synchronously sets a block state in the given {@link ExtendedBlockStorage} at the location x, y, z to the given {@link IBlockState}
+     *
+     * @param blockStorage the part of the chunk to manipulate
+     * @param x            the local x coordinate
+     * @param y            the local y coordinate
+     * @param z            the local z coordinate
+     * @param state        the state to set at the desired location
+     */
+    private synchronized void setBlock(ExtendedBlockStorage blockStorage, int x, int y, int z, IBlockState state) {
         synchronized (this) {
             blockStorage.getData().set(x, y, z, state);
         }

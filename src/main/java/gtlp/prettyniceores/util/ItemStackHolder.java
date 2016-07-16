@@ -10,6 +10,12 @@ import java.util.Objects;
 /**
  * Created by Marv1 on 16.07.2016.
  */
+
+/**
+ * Class that holds an {@link ItemStack} with equals() and hashcode() methods
+ *
+ * @see net.minecraft.item.ItemStack
+ */
 public class ItemStackHolder implements Comparable {
 
     private ItemStack itemStack;
