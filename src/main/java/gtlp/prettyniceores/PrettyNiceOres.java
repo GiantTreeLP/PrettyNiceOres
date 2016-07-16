@@ -8,6 +8,7 @@ import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
+import gtlp.prettyniceores.items.DebugAndTestingItem;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
 import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.block.Block;
@@ -55,6 +56,7 @@ public class PrettyNiceOres {
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
 
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(Constants.MOD_ID) {
+        @SuppressWarnings("ConstantConditions")
         @SideOnly(Side.CLIENT)
         @Override
         @Nonnull
@@ -86,6 +88,11 @@ public class PrettyNiceOres {
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
+    /**
+     * Adds a smelting recipe for the given {@link Item}, if the item is an {@link ISmeltable} (takes all items, though)
+     *
+     * @param item to register the smelting recipe for
+     */
     private static void addSmeltingRecipe(Item item) {
         if (item instanceof ISmeltable) {
             ItemStack result = ((ISmeltable) item).getSmeltingResult();
@@ -95,6 +102,11 @@ public class PrettyNiceOres {
         }
     }
 
+    /**
+     * Adds a smelting recipe for the given {@link Block}, if the item is an {@link ISmeltable} (takes all blocks, though)
+     *
+     * @param block to register the smelting recipe for
+     */
     private static void addSmeltingRecipe(Block block) {
         if (block instanceof ISmeltable) {
             ItemStack result = ((ISmeltable) block).getSmeltingResult();
@@ -115,6 +127,8 @@ public class PrettyNiceOres {
 
         addVanillaOres();
         addModOres();
+
+        addItems();
 
         blockList.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
@@ -139,6 +153,16 @@ public class PrettyNiceOres {
         });
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
         LOGGER.info("PreInit done.");
+    }
+
+    /**
+     * Adds items.
+     */
+    private void addItems() {
+        String debugString = System.getenv("pno_debug");
+        if (debugString != null && debugString.equals("true")) {
+            itemList.put(DebugAndTestingItem.NAME, new DebugAndTestingItem());
+        }
     }
 
     /**
@@ -186,7 +210,6 @@ public class PrettyNiceOres {
     public void init(FMLInitializationEvent event) {
         itemList.forEach((name, item) -> {
             if (event.getSide().isClient()) {
-                registerItemRenderer(item, 0);
             }
         });
         itemBlockList.forEach((name, item) -> {
