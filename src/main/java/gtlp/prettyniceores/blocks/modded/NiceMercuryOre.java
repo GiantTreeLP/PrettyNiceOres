@@ -10,21 +10,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Marv1 on 09.06.2016.
+ * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
  */
-public class NiceTinNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
+public class NiceMercuryOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
-    public static final String NAME = "nice_tin_ore";
-    public static final String OREDICTTYPE = "oreTin";
+    public static final String NAME = "nice_mercury_ore";
+    public static final String OREDICTTYPE = "oreMercury";
 
-    public NiceTinNiceOre() {
+    public NiceMercuryOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
+        setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
     }
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return OreDictUtils.getFirstOre("ingotTin");
+        return OreDictUtils.getFirstOre("ingotMercury");
     }
 
     @Override

@@ -12,12 +12,12 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-public class NiceIronNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
+public class NiceIronOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
     public static final String NAME = "nice_iron_ore";
     public static final String OREDICTTYPE = "oreIron";
 
-    public NiceIronNiceOre() {
+    public NiceIronOre() {
         super(NAME);
         setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
     }

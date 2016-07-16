@@ -25,12 +25,12 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceRedstoneNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
+public class NiceRedstoneOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
     public static final String NAME = "nice_redstone_ore";
     public static final String OREDICTTYPE = "oreRedstone";
 
-    public NiceRedstoneNiceOre() {
+    public NiceRedstoneOre() {
         super(NAME);
         setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }

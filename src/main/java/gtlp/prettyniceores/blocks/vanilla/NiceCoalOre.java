@@ -20,13 +20,13 @@ import java.util.Random;
 /**
  * Created by Marv1 on 23.05.2016.
  */
-public class NiceCoalNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
+public class NiceCoalOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
     public static final String NAME = "nice_coal_ore";
     public static final String OREDICTTYPE = "oreCoal";
     private static final int SMELTING_AMOUNT = 4;
 
-    public NiceCoalNiceOre() {
+    public NiceCoalOre() {
         super(NAME);
         setHarvestLevel("pickaxe", Item.ToolMaterial.WOOD.getHarvestLevel());
     }

@@ -1,30 +1,30 @@
-package gtlp.prettyniceores.blocks.vanilla;
+package gtlp.prettyniceores.blocks.modded;
 
 import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.INiceOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
-import net.minecraft.init.Items;
+import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
+ * Created by Marv1 on 09.06.2016.
  */
-public class NiceGoldNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
+public class NiceSilverOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
-    public static final String NAME = "nice_gold_ore";
-    public static final String OREDICTTYPE = "oreGold";
+    public static final String NAME = "nice_silver_ore";
+    public static final String OREDICTTYPE = "oreSilver";
 
-    public NiceGoldNiceOre() {
+    public NiceSilverOre() {
         super(NAME);
         setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
     }
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return new ItemStack(Items.GOLD_INGOT);
+        return OreDictUtils.getFirstOre("ingotSilver");
     }
 
     @Override
@@ -37,7 +37,6 @@ public class NiceGoldNiceOre extends NiceOreBase implements ISmeltable, IOreDict
         return OREDICTTYPE;
     }
 
-    @Override
     public final String getName() {
         return NAME;
     }

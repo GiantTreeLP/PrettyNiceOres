@@ -12,19 +12,19 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
  */
-public class NiceZincNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
+public class NiceCopperOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
-    public static final String NAME = "nice_zinc_ore";
-    public static final String OREDICTTYPE = "oreZinc";
+    public static final String NAME = "nice_copper_ore";
+    public static final String OREDICTTYPE = "oreCopper";
 
-    public NiceZincNiceOre() {
+    public NiceCopperOre() {
         super(NAME);
         setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
     }
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return OreDictUtils.getFirstOre("ingotZinc");
+        return OreDictUtils.getFirstOre("ingotCopper");
     }
 
     @Override
