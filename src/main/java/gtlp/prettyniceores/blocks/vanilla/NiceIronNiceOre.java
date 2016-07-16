@@ -2,7 +2,7 @@ package gtlp.prettyniceores.blocks.vanilla;
 
 import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
-import gtlp.prettyniceores.interfaces.IOre;
+import gtlp.prettyniceores.interfaces.INiceOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import net.minecraft.init.Items;
@@ -12,12 +12,12 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Marv1 on 22.05.2016 as part of forge-modding-1.9.
  */
-public class NiceIronOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, IOre {
+public class NiceIronNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
     public static final String NAME = "nice_iron_ore";
     public static final String OREDICTTYPE = "oreIron";
 
-    public NiceIronOre() {
+    public NiceIronNiceOre() {
         super(NAME);
         setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
     }

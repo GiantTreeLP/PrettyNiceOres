@@ -2,7 +2,7 @@ package gtlp.prettyniceores.blocks.modded;
 
 import gtlp.prettyniceores.blocks.NiceOreBase;
 import gtlp.prettyniceores.interfaces.INamedBlock;
-import gtlp.prettyniceores.interfaces.IOre;
+import gtlp.prettyniceores.interfaces.INiceOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import gtlp.prettyniceores.util.OreDictUtils;
@@ -10,21 +10,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * Created by Marv1 on 09.06.2016.
+ * Created by Marv1 on 23.05.2016 as part of forge-modding-1.9.
  */
-public class NiceSilverOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, IOre {
+public class NiceCopperNiceOre extends NiceOreBase implements ISmeltable, IOreDictCompatible, INamedBlock, INiceOre {
 
-    public static final String NAME = "nice_silver_ore";
-    public static final String OREDICTTYPE = "oreSilver";
+    public static final String NAME = "nice_copper_ore";
+    public static final String OREDICTTYPE = "oreCopper";
 
-    public NiceSilverOre() {
+    public NiceCopperNiceOre() {
         super(NAME);
-        setHarvestLevel("pickaxe", Item.ToolMaterial.IRON.getHarvestLevel());
+        setHarvestLevel("pickaxe", Item.ToolMaterial.STONE.getHarvestLevel());
     }
 
     @Override
     public final ItemStack getSmeltingResult() {
-        return OreDictUtils.getFirstOre("ingotSilver");
+        return OreDictUtils.getFirstOre("ingotCopper");
     }
 
     @Override
