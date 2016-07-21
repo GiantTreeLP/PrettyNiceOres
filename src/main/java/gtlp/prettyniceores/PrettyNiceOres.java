@@ -1,5 +1,6 @@
 package gtlp.prettyniceores;
 
+import com.google.common.collect.Maps;
 import gtlp.prettyniceores.blocks.modded.*;
 import gtlp.prettyniceores.blocks.vanilla.*;
 import gtlp.prettyniceores.common.CommonProxy;
@@ -14,6 +15,7 @@ import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -21,6 +23,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -40,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Stream;
 
 /**
@@ -72,6 +77,7 @@ public class PrettyNiceOres {
 
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
+    private static Configuration config;
 
 
     public static Map<String, Block> getBlockList() {
@@ -116,6 +122,57 @@ public class PrettyNiceOres {
         }
     }
 
+    private static void filterBlocksAndApplyConfig(final Map<String, Block> blockList, Configuration config) {
+        config.setCategoryComment(Constants.CATEGORY_ENABLED_BLOCKS, I18n.format(String.format(Constants.CONFIG_S_CATEGORY, Constants.CATEGORY_ENABLED_BLOCKS)));
+        ConcurrentMap<String, Block> newBlockList = Maps.newConcurrentMap();
+        blockList.entrySet().forEach(entry -> {
+                    Property prop = config.get(Constants.CATEGORY_ENABLED_BLOCKS, entry.getKey(), "true", "", Property.Type.BOOLEAN);
+                    if (prop.getBoolean()) {
+                        newBlockList.put(entry.getKey(), entry.getValue());
+                    }
+                }
+        );
+        blockList.clear();
+        blockList.putAll(newBlockList);
+    }
+
+    /**
+     * Adds all replacements for the basic vanilla ores
+     *
+     * @param blockList list to add blocks to
+     */
+    private static void addVanillaOres(final Map<String, Block> blockList) {
+        blockList.put(NiceIronOre.NAME, new NiceIronOre());
+        blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
+        blockList.put(NiceCoalOre.NAME, new NiceCoalOre());
+        blockList.put(NiceRedstoneOre.NAME, new NiceRedstoneOre());
+        blockList.put(NiceLapisOre.NAME, new NiceLapisOre());
+        blockList.put(NiceDiamondOre.NAME, new NiceDiamondOre());
+        blockList.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
+        blockList.put(NiceNetherQuartzOre.NAME, new NiceNetherQuartzOre());
+    }
+
+    /**
+     * Adds all replacements for mod ores, if they have been created by any other mod.
+     *
+     * @param blockList list to add blocks to
+     */
+    private static void addModOres(final Map<String, Block> blockList) {
+        Block[] blockArray = {
+                new NiceCopperOre(),
+                new NiceTinOre(),
+                new NiceSilverOre(),
+                new NiceLeadOre(),
+                new NiceNickelOre(),
+                new NicePlatinumOre(),
+                new NiceZincOre(),
+                new NiceMercuryOre(),
+        };
+
+        Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
+                .forEach(block -> blockList.put(((INamedBlock) block).getName(), block));
+    }
+
     /**
      * Preinitialization of the mod.
      *
@@ -123,11 +180,16 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+
+        config = new Configuration(event.getSuggestedConfigurationFile());
+        config.load();
+
         RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
-        addVanillaOres();
-        addModOres();
+        addVanillaOres(blockList);
+        addModOres(blockList);
 
+        filterBlocksAndApplyConfig(blockList, config);
         addItems();
 
         blockList.forEach((name, block) -> {
@@ -153,6 +215,7 @@ public class PrettyNiceOres {
         });
 
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
+        config.save();
         LOGGER.info("PreInit done.");
     }
 
@@ -160,44 +223,9 @@ public class PrettyNiceOres {
      * Adds items.
      */
     private void addItems() {
-        String debugString = System.getenv("pno_debug");
-        if (debugString != null && debugString.equals("true")) {
+        if (config.get(Constants.CATEGORY_DEBUG, "debug_item", "false", "", Property.Type.BOOLEAN).getBoolean()) {
             itemList.put(DebugAndTestingItem.NAME, new DebugAndTestingItem());
         }
-    }
-
-    /**
-     * Adds all replacements for the basic vanilla ores
-     */
-    private void addVanillaOres() {
-        blockList.put(NiceIronOre.NAME, new NiceIronOre());
-        blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
-        blockList.put(NiceCoalOre.NAME, new NiceCoalOre());
-        blockList.put(NiceRedstoneOre.NAME, new NiceRedstoneOre());
-        blockList.put(NiceLapisOre.NAME, new NiceLapisOre());
-        blockList.put(NiceDiamondOre.NAME, new NiceDiamondOre());
-        blockList.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
-        blockList.put(NiceNetherQuartzOre.NAME, new NiceNetherQuartzOre());
-    }
-
-    /**
-     * Adds all replacements for mod ores, if they have been created by any other mod.
-     */
-    private void addModOres() {
-        Block[] blockArray = {
-                new NiceCopperOre(),
-                new NiceTinOre(),
-                new NiceSilverOre(),
-                new NiceLeadOre(),
-                new NiceNickelOre(),
-                new NicePlatinumOre(),
-                new NiceZincOre(),
-                new NiceMercuryOre(),
-        };
-
-        Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
-                .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
-                .forEach(block -> blockList.put(((INamedBlock) block).getName(), block));
     }
 
     /**

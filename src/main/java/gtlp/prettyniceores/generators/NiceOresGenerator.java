@@ -1,5 +1,6 @@
 package gtlp.prettyniceores.generators;
 
+import com.google.common.collect.Maps;
 import gtlp.prettyniceores.PrettyNiceOres;
 import gtlp.prettyniceores.interfaces.INiceOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -26,7 +27,7 @@ public class NiceOresGenerator implements IWorldGenerator {
 
     //Size of storage array (cube with indices 0 to 15, ie. 16)
     private static final int STORAGE_ARRAY_SIZE = 16;
-    private final ConcurrentHashMap<ItemStackHolder, IBlockState> replacementMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<ItemStackHolder, IBlockState> replacementMap = Maps.newConcurrentMap();
 
     public NiceOresGenerator() {
         PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
