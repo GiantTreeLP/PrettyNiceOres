@@ -56,6 +56,7 @@ public class DebugAndTestingItem extends Item {
             Assert.assertEquals("Checks whether the static APPLE and the registered apple create equal ItemStackHolders", apple, apple2);
 
             ItemStack apple3 = new ItemStack(Items.APPLE, 1, 0);
+            //noinspection AssertEqualsBetweenInconvertibleTypes
             Assert.assertEquals("Checks whether the equals() method correctly check equality of ItemStacks", apple, apple3);
 
             PrettyNiceOres.LOGGER.info("Equality check OK");

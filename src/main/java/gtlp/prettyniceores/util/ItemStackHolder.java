@@ -8,10 +8,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * Created by Marv1 on 16.07.2016.
- */
-
-/**
  * Class that holds an {@link ItemStack} with equals() and hashcode() methods
  *
  * @see net.minecraft.item.ItemStack
@@ -44,6 +40,7 @@ public class ItemStackHolder implements Comparable {
         this.setItemStack(new ItemStack(itemIn, amount, meta));
     }
 
+    @SuppressWarnings("ConstantConditions")
     public ItemStackHolder(Block blockIn, int amount, int meta) {
         this.setItemStack(new ItemStack(Item.getItemFromBlock(blockIn), amount, meta));
     }
@@ -72,6 +69,7 @@ public class ItemStackHolder implements Comparable {
 
     @Override
     public int hashCode() {
+        //noinspection ConstantConditions
         if (getItemStack().getItem() == null) {
             return 0;
         }
@@ -94,10 +92,10 @@ public class ItemStackHolder implements Comparable {
             throw new ClassCastException("Can't cast " + o.getClass().toString() + " to " + getClass().toString());
         } else {
             int ids = Integer.compare(Item.getIdFromItem(getItemStack().getItem()), Item.getIdFromItem(((ItemStackHolder) o).getItemStack().getItem()));
-            if (ids == 0) {
-                return Integer.compare(getItemStack().getMetadata(), ((ItemStackHolder) o).getItemStack().getMetadata());
-            } else {
+            if (ids != 0) {
                 return ids;
+            } else {
+                return Integer.compare(getItemStack().getMetadata(), ((ItemStackHolder) o).getItemStack().getMetadata());
             }
         }
     }

@@ -197,9 +197,7 @@ public class PrettyNiceOres {
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
                 .filter(block -> OreDictionary.doesOreNameExist(((IOreDictCompatible) block).getOreDictType()))
-                .forEach(block -> {
-                    blockList.put(((INamedBlock) block).getName(), block);
-                });
+                .forEach(block -> blockList.put(((INamedBlock) block).getName(), block));
     }
 
     /**

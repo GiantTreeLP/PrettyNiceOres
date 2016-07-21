@@ -29,30 +29,28 @@ public class NiceOresGenerator implements IWorldGenerator {
     private final ConcurrentHashMap<ItemStackHolder, IBlockState> replacementMap = new ConcurrentHashMap<>();
 
     public NiceOresGenerator() {
-        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> {
-            OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
-                if (stack.getItem() instanceof ItemBlock && !(stack.getItem() instanceof INiceOre)) {
-                    replacementMap.put(new ItemStackHolder(stack), niceOre.getValue().getDefaultState());
-                }
-            });
-        });
+        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
+            if (stack.getItem() instanceof ItemBlock && !(stack.getItem() instanceof INiceOre)) {
+                replacementMap.put(new ItemStackHolder(stack), niceOre.getValue().getDefaultState());
+            }
+        }));
     }
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
         //Fairly quick nested loop to replace vanilla and ore dictionary ores with ours upon generation of a chunk.
-        Stream.of(chunk.getBlockStorageArray()).filter(blockStorage -> blockStorage != null).parallel().forEach(blockStorage ->
+        Stream.of(chunk.getBlockStorageArray()).filter(blockStorage ->
+                blockStorage != null).parallel().forEach(blockStorage ->
                 IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(y ->
-                        IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(z -> {
-                            IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(x -> {
-                                IBlockState state = blockStorage.get(x, y, z);
-                                ItemStackHolder key = new ItemStackHolder(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
-                                if (replacementMap.containsKey(key)) {
-                                    setBlock(blockStorage, x, y, z, replacementMap.get(key));
-                                }
-                            });
-                        })));
+                        IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(z ->
+                                IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(x -> {
+                                    IBlockState state = blockStorage.get(x, y, z);
+                                    ItemStackHolder key = new ItemStackHolder(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+                                    if (replacementMap.containsKey(key)) {
+                                        setBlock(blockStorage, x, y, z, replacementMap.get(key));
+                                    }
+                                }))));
     }
 
     /**
