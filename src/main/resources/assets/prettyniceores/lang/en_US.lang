@@ -17,4 +17,5 @@ tile.nice_mercury_ore.name=Nice Mercury Ore
 itemGroup.prettyniceores=Nice Ores
 item.pno_debugItem.name=Debug Item
 config.enabled_blocks.category=Enabled blocks. Set the value to "false" to disable a specific block (a new world is highly recommended).
+config.enabled_blocks.block.comment=Enable %s
 config.debug.category=Debug

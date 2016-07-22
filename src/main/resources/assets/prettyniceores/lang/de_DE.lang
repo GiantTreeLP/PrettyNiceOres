@@ -17,4 +17,5 @@ tile.nice_mercury_ore.name=Nettes Quecksilbererz
 itemGroup.prettyniceores=Nette Erze
 item.pno_debugItem.name=Debuggegenstand
 config.enabled_blocks.category=Eingeschaltete Blöcke. Den Wert auf "false" setzen, um einen Block auszuschalten (eine neue Welt wird empfohlen).
+config.enabled_blocks.block.comment=Aktiviere %s
 config.debug.category=Debug

@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import gtlp.prettyniceores.blocks.modded.*;
 import gtlp.prettyniceores.blocks.vanilla.*;
 import gtlp.prettyniceores.common.CommonProxy;
+import gtlp.prettyniceores.config.NiceConfig;
 import gtlp.prettyniceores.events.OnPlayerLoginEvent;
 import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
@@ -55,6 +56,7 @@ import java.util.stream.Stream;
         name = Constants.NAME,
         updateJSON = Constants.UPDATE_URL,
         dependencies = Constants.DEPENDENCIES,
+        guiFactory = Constants.GUI_FACTORY,
         acceptedMinecraftVersions = Constants.MC_VERSION)
 
 public class PrettyNiceOres {
@@ -77,7 +79,7 @@ public class PrettyNiceOres {
 
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
-    private static Configuration config;
+    private static NiceConfig config;
 
 
     public static Map<String, Block> getBlockList() {
@@ -126,7 +128,7 @@ public class PrettyNiceOres {
         config.setCategoryComment(Constants.CATEGORY_ENABLED_BLOCKS, I18n.format(String.format(Constants.CONFIG_S_CATEGORY, Constants.CATEGORY_ENABLED_BLOCKS)));
         ConcurrentMap<String, Block> newBlockList = Maps.newConcurrentMap();
         blockList.entrySet().forEach(entry -> {
-                    Property prop = config.get(Constants.CATEGORY_ENABLED_BLOCKS, entry.getKey(), "true", "", Property.Type.BOOLEAN);
+            Property prop = config.get(Constants.CATEGORY_ENABLED_BLOCKS, entry.getKey(), "true", I18n.format("config.enabled_blocks.block.comment", entry.getValue().getLocalizedName()), Property.Type.BOOLEAN);
                     if (prop.getBoolean()) {
                         newBlockList.put(entry.getKey(), entry.getValue());
                     }
@@ -173,6 +175,10 @@ public class PrettyNiceOres {
                 .forEach(block -> blockList.put(((INamedBlock) block).getName(), block));
     }
 
+    public static NiceConfig getConfig() {
+        return config;
+    }
+
     /**
      * Preinitialization of the mod.
      *
@@ -181,8 +187,7 @@ public class PrettyNiceOres {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
-        config = new Configuration(event.getSuggestedConfigurationFile());
-        config.load();
+        config = new NiceConfig(event.getSuggestedConfigurationFile());
 
         RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
@@ -215,8 +220,8 @@ public class PrettyNiceOres {
         });
 
         MinecraftForge.EVENT_BUS.register(new OnPlayerLoginEvent());
-        config.save();
         LOGGER.info("PreInit done.");
+        config.save();
     }
 
     /**
