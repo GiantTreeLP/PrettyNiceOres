@@ -1,1 +1,0 @@
-gradlew install setupdecompworkspace idea genintellijruns 
