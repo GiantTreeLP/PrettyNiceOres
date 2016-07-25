@@ -123,7 +123,7 @@ public abstract class NiceOreBase extends BlockOre {
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
             //Increase amount of destroyed blocks
             blocks.getAndAdd(1);
-            itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 || itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() == 1 ? 1 : 2, world.rand);
+            itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 || itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() == 1 ? 1 : 3, world.rand);
             for (Vec3i vector : ADJACENT) {
                 if (Thread.currentThread().getStackTrace().length < STACK_LIMIT - 1) {
                     BlockPos posAdjacent = pos.add(vector);
