@@ -8,10 +8,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 
 /**
- * Created by Marv1 on 16.07.2016.
- */
-
-/**
  * Class that holds an {@link ItemStack} with equals() and hashcode() methods
  *
  * @see net.minecraft.item.ItemStack
@@ -20,8 +16,8 @@ public class ItemStackHolder implements Comparable {
 
     private ItemStack itemStack;
 
-    public ItemStackHolder(ItemStack itemStack) {
-        this.setItemStack(itemStack);
+    public ItemStackHolder(ItemStack newItemStack) {
+        this.setItemStack(newItemStack);
     }
 
     public ItemStackHolder(Block blockIn) {
@@ -44,20 +40,21 @@ public class ItemStackHolder implements Comparable {
         this.setItemStack(new ItemStack(itemIn, amount, meta));
     }
 
+    @SuppressWarnings("ConstantConditions")
     public ItemStackHolder(Block blockIn, int amount, int meta) {
         this.setItemStack(new ItemStack(Item.getItemFromBlock(blockIn), amount, meta));
     }
 
-    public ItemStack getItemStack() {
+    public final ItemStack getItemStack() {
         return itemStack;
     }
 
-    public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    public final void setItemStack(ItemStack newItemStack) {
+        this.itemStack = newItemStack;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (obj instanceof ItemStackHolder) {
             if (getItemStack() == ((ItemStackHolder) obj).getItemStack() || getItemStack().getItem() == ((ItemStackHolder) obj).getItemStack().getItem() || ItemStack.areItemStacksEqual(getItemStack(), ((ItemStackHolder) obj).getItemStack())) {
                 return true;
@@ -71,7 +68,8 @@ public class ItemStackHolder implements Comparable {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
+        //noinspection ConstantConditions
         if (getItemStack().getItem() == null) {
             return 0;
         }
@@ -79,25 +77,25 @@ public class ItemStackHolder implements Comparable {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "ItemStackHolder{" +
                 "itemStack=" + getItemStack().toString() +
                 '}';
     }
 
     @Override
-    public int compareTo(@Nullable Object o) {
+    public final int compareTo(@Nullable Object o) {
         if (o == null) {
-            throw new NullPointerException("Can't compare to null");
+            throw new IllegalArgumentException("Can't compare to null");
         }
         if (!(o instanceof ItemStackHolder)) {
             throw new ClassCastException("Can't cast " + o.getClass().toString() + " to " + getClass().toString());
         } else {
             int ids = Integer.compare(Item.getIdFromItem(getItemStack().getItem()), Item.getIdFromItem(((ItemStackHolder) o).getItemStack().getItem()));
-            if (ids == 0) {
-                return Integer.compare(getItemStack().getMetadata(), ((ItemStackHolder) o).getItemStack().getMetadata());
-            } else {
+            if (ids != 0) {
                 return ids;
+            } else {
+                return Integer.compare(getItemStack().getMetadata(), ((ItemStackHolder) o).getItemStack().getMetadata());
             }
         }
     }

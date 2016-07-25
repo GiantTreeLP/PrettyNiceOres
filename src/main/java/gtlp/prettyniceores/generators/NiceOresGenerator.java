@@ -1,5 +1,6 @@
 package gtlp.prettyniceores.generators;
 
+import com.google.common.collect.Maps;
 import gtlp.prettyniceores.PrettyNiceOres;
 import gtlp.prettyniceores.interfaces.INiceOre;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
@@ -15,7 +16,7 @@ import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -26,33 +27,14 @@ public class NiceOresGenerator implements IWorldGenerator {
 
     //Size of storage array (cube with indices 0 to 15, ie. 16)
     private static final int STORAGE_ARRAY_SIZE = 16;
-    private final ConcurrentHashMap<ItemStackHolder, IBlockState> replacementMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<ItemStackHolder, IBlockState> replacementMap = Maps.newConcurrentMap();
 
     public NiceOresGenerator() {
-        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> {
-            OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
-                if (stack.getItem() instanceof ItemBlock && !(stack.getItem() instanceof INiceOre)) {
-                    replacementMap.put(new ItemStackHolder(stack), niceOre.getValue().getDefaultState());
-                }
-            });
-        });
-    }
-
-    @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
-        //Fairly quick nested loop to replace vanilla and ore dictionary ores with ours upon generation of a chunk.
-        Stream.of(chunk.getBlockStorageArray()).filter(blockStorage -> blockStorage != null).parallel().forEach(blockStorage ->
-                IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(y ->
-                        IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(z -> {
-                            IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(x -> {
-                                IBlockState state = blockStorage.get(x, y, z);
-                                ItemStackHolder key = new ItemStackHolder(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
-                                if (replacementMap.containsKey(key)) {
-                                    setBlock(blockStorage, x, y, z, replacementMap.get(key));
-                                }
-                            });
-                        })));
+        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
+            if (stack.getItem() instanceof ItemBlock && !(stack.getItem() instanceof INiceOre)) {
+                replacementMap.put(new ItemStackHolder(stack), niceOre.getValue().getDefaultState());
+            }
+        }));
     }
 
     /**
@@ -64,9 +46,27 @@ public class NiceOresGenerator implements IWorldGenerator {
      * @param z            the local z coordinate
      * @param state        the state to set at the desired location
      */
-    private synchronized void setBlock(ExtendedBlockStorage blockStorage, int x, int y, int z, IBlockState state) {
-        synchronized (this) {
+    private static synchronized void setBlock(ExtendedBlockStorage blockStorage, int x, int y, int z, IBlockState state) {
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
+        synchronized (blockStorage) {
             blockStorage.getData().set(x, y, z, state);
         }
+    }
+
+    @Override
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+        Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
+        //Fairly quick nested loop to replace vanilla and ore dictionary ores with ours upon generation of a chunk.
+        Stream.of(chunk.getBlockStorageArray()).filter(blockStorage ->
+                blockStorage != null).parallel().forEach(blockStorage ->
+                IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(y ->
+                        IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(z ->
+                                IntStream.range(0, STORAGE_ARRAY_SIZE).forEach(x -> {
+                                    IBlockState state = blockStorage.get(x, y, z);
+                                    ItemStackHolder key = new ItemStackHolder(state.getBlock(), 1, state.getBlock().getMetaFromState(state));
+                                    if (replacementMap.containsKey(key)) {
+                                        setBlock(blockStorage, x, y, z, replacementMap.get(key));
+                                    }
+                                }))));
     }
 }

@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
  */
 public class ItemOreDictCompatible extends Item implements IOreDictCompatible {
 
-    private String oreDictType;
+    private final String oreDictType;
 
     /**
      * @param oreDictName name used to register in {@link net.minecraftforge.oredict.OreDictionary}, {@link ItemOreDictCompatible#getOreDictType}
