@@ -37,6 +37,22 @@ public class NiceOresGenerator implements IWorldGenerator {
         }));
     }
 
+    /**
+     * Synchronously sets a block state in the given {@link ExtendedBlockStorage} at the location x, y, z to the given {@link IBlockState}
+     *
+     * @param blockStorage the part of the chunk to manipulate
+     * @param x            the local x coordinate
+     * @param y            the local y coordinate
+     * @param z            the local z coordinate
+     * @param state        the state to set at the desired location
+     */
+    private static synchronized void setBlock(ExtendedBlockStorage blockStorage, int x, int y, int z, IBlockState state) {
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
+        synchronized (blockStorage) {
+            blockStorage.getData().set(x, y, z, state);
+        }
+    }
+
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         Chunk chunk = chunkProvider.provideChunk(chunkX, chunkZ);
@@ -52,20 +68,5 @@ public class NiceOresGenerator implements IWorldGenerator {
                                         setBlock(blockStorage, x, y, z, replacementMap.get(key));
                                     }
                                 }))));
-    }
-
-    /**
-     * Synchronously sets a block state in the given {@link ExtendedBlockStorage} at the location x, y, z to the given {@link IBlockState}
-     *
-     * @param blockStorage the part of the chunk to manipulate
-     * @param x            the local x coordinate
-     * @param y            the local y coordinate
-     * @param z            the local z coordinate
-     * @param state        the state to set at the desired location
-     */
-    private synchronized void setBlock(ExtendedBlockStorage blockStorage, int x, int y, int z, IBlockState state) {
-        synchronized (this) {
-            blockStorage.getData().set(x, y, z, state);
-        }
     }
 }
