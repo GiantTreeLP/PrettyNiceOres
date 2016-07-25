@@ -35,12 +35,12 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-version = "1.9.4-0.4.2"
+version = "1.9.4-0.4.3"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "prettyniceores"
 
 minecraft {
-    version = "1.9.4-12.17.0.1987"
+    version = "1.9.4-12.17.0.1990"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
@@ -99,7 +99,6 @@ curseforge {
     apiKey = project.hasProperty("curseapitoken") ? project.getProperty("curseapitoken") : ""
     project {
         id = '245633'
-        changelog = "Changelog and releases: https://github.com/GiantTreeLP/PrettyNiceOres/commits/1.9.4"
         releaseType = 'release'
 
         mainArtifact jar

@@ -31,24 +31,24 @@ public class DebugAndTestingItem extends Item {
 
     @Override
     @Nonnull
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    public final ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         ItemStackHolderTest test = new ItemStackHolderTest();
         try {
             test.testEquals();
         } catch (Exception e) {
-            e.printStackTrace();
+            PrettyNiceOres.LOGGER.error(e);
             return ActionResult.newResult(EnumActionResult.FAIL, itemStackIn);
         }
         try {
             test.testHashCode();
             return ActionResult.newResult(EnumActionResult.SUCCESS, itemStackIn);
         } catch (Exception e) {
-            e.printStackTrace();
+            PrettyNiceOres.LOGGER.error(e);
             return ActionResult.newResult(EnumActionResult.FAIL, itemStackIn);
         }
     }
 
-    private class ItemStackHolderTest {
+    private static class ItemStackHolderTest {
 
         void testEquals() throws Exception {
             ItemStackHolder apple = new ItemStackHolder(Items.APPLE);
@@ -56,6 +56,7 @@ public class DebugAndTestingItem extends Item {
             Assert.assertEquals("Checks whether the static APPLE and the registered apple create equal ItemStackHolders", apple, apple2);
 
             ItemStack apple3 = new ItemStack(Items.APPLE, 1, 0);
+            //noinspection AssertEqualsBetweenInconvertibleTypes
             Assert.assertEquals("Checks whether the equals() method correctly check equality of ItemStacks", apple, apple3);
 
             PrettyNiceOres.LOGGER.info("Equality check OK");
