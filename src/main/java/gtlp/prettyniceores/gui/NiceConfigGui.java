@@ -29,7 +29,7 @@ public class NiceConfigGui extends GuiConfig {
     }
 
     @Override
-    public void onGuiClosed() {
+    public final void onGuiClosed() {
         super.onGuiClosed();
         PrettyNiceOres.getConfig().save();
     }

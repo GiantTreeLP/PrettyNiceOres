@@ -16,8 +16,8 @@ public class ItemStackHolder implements Comparable {
 
     private ItemStack itemStack;
 
-    public ItemStackHolder(ItemStack itemStack) {
-        this.setItemStack(itemStack);
+    public ItemStackHolder(ItemStack newItemStack) {
+        this.setItemStack(newItemStack);
     }
 
     public ItemStackHolder(Block blockIn) {
@@ -45,16 +45,16 @@ public class ItemStackHolder implements Comparable {
         this.setItemStack(new ItemStack(Item.getItemFromBlock(blockIn), amount, meta));
     }
 
-    public ItemStack getItemStack() {
+    public final ItemStack getItemStack() {
         return itemStack;
     }
 
-    public void setItemStack(ItemStack itemStack) {
-        this.itemStack = itemStack;
+    public final void setItemStack(ItemStack newItemStack) {
+        this.itemStack = newItemStack;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (obj instanceof ItemStackHolder) {
             if (getItemStack() == ((ItemStackHolder) obj).getItemStack() || getItemStack().getItem() == ((ItemStackHolder) obj).getItemStack().getItem() || ItemStack.areItemStacksEqual(getItemStack(), ((ItemStackHolder) obj).getItemStack())) {
                 return true;
@@ -68,7 +68,7 @@ public class ItemStackHolder implements Comparable {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         //noinspection ConstantConditions
         if (getItemStack().getItem() == null) {
             return 0;
@@ -77,16 +77,16 @@ public class ItemStackHolder implements Comparable {
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return "ItemStackHolder{" +
                 "itemStack=" + getItemStack().toString() +
                 '}';
     }
 
     @Override
-    public int compareTo(@Nullable Object o) {
+    public final int compareTo(@Nullable Object o) {
         if (o == null) {
-            throw new NullPointerException("Can't compare to null");
+            throw new IllegalArgumentException("Can't compare to null");
         }
         if (!(o instanceof ItemStackHolder)) {
             throw new ClassCastException("Can't cast " + o.getClass().toString() + " to " + getClass().toString());
