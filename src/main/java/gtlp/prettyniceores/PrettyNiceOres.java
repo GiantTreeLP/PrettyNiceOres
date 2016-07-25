@@ -12,7 +12,6 @@ import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
 import gtlp.prettyniceores.items.DebugAndTestingItem;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
-import gtlp.prettyniceores.util.OreDictUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -36,7 +35,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.RecipeSorter;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -75,12 +73,14 @@ public class PrettyNiceOres {
     private static final Map<String, Block> blockList = new HashMap<>();
     private static final Map<String, Item> itemList = new HashMap<>();
     private static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static final List<IRecipe> recipeList = new ArrayList<>();
 
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
-    private static NiceConfig config;
-
+    @Mod.Instance
+    private static PrettyNiceOres instance;
+    private NiceConfig config;
 
     public static Map<String, Block> getBlockList() {
         return blockList;
@@ -176,7 +176,7 @@ public class PrettyNiceOres {
     }
 
     public static NiceConfig getConfig() {
-        return config;
+        return instance.config;
     }
 
     /**
@@ -242,6 +242,7 @@ public class PrettyNiceOres {
     public void init(FMLInitializationEvent event) {
         itemList.forEach((name, item) -> {
             if (event.getSide().isClient()) {
+                registerItemRenderer(item, 0);
             }
         });
         itemBlockList.forEach((name, item) -> {
@@ -251,10 +252,7 @@ public class PrettyNiceOres {
         });
         blockList.entrySet().stream().filter(entry -> entry.getValue() instanceof IOreDictCompatible).forEach(entry -> {
             IOreDictCompatible block = (IOreDictCompatible) entry.getValue();
-            ItemStack result = OreDictUtils.getFirstOre(block.getOreDictType());
-            if (result != null) {
-                GameRegistry.addRecipe(new ShapelessOreRecipe(result, block));
-            }
+            GameRegistry.addRecipe(new ShapelessOreDictRecipe(block.getOreDictType(), block.getOreDictType()));
         });
         recipeList.forEach(GameRegistry::addRecipe);
 
