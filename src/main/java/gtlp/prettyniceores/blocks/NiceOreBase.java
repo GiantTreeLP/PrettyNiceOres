@@ -2,6 +2,7 @@ package gtlp.prettyniceores.blocks;
 
 import gtlp.prettyniceores.Constants;
 import gtlp.prettyniceores.PrettyNiceOres;
+import gtlp.prettyniceores.util.MathUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.state.IBlockState;
@@ -83,7 +84,6 @@ public abstract class NiceOreBase extends BlockOre {
                     getAdjacentBlocks(world, pos, world.getBlockState(pos).getBlock(), player, itemMainhand, blocks);
                     stopWatch.stop();
                     PrettyNiceOres.LOGGER.printf(Level.INFO, "Removed %d blocks in %d ms", blocks.get(), stopWatch.getTime());
-                    itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 ? 1 : 2, world.rand);
                 }
             }
         }
@@ -104,7 +104,8 @@ public abstract class NiceOreBase extends BlockOre {
         if (!world.getChunkFromBlockCoords(pos).isLoaded()) {
             return;
         }
-        if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemMainhand.getItemDamage() <= itemMainhand.getMaxDamage()) {
+        int itemDurability = itemMainhand.getMaxDamage() - itemMainhand.getItemDamage();
+        if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemDurability >= 0 && itemMainhand.stackSize > 0) {
             int silktouchLvl = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemMainhand);
             if (silktouchLvl == 0) {
                 int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand);
@@ -123,7 +124,13 @@ public abstract class NiceOreBase extends BlockOre {
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
             //Increase amount of destroyed blocks
             blocks.getAndAdd(1);
-            itemMainhand.attemptDamageItem(itemMainhand.getItemDamage() % 2 == 0 || itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() == 1 ? 1 : 3, world.rand);
+
+            if (itemMainhand.stackSize > 0 && (MathUtils.fastModulo(itemDurability, 3) == 0 || itemDurability < 3)) {
+                itemMainhand.damageItem(1, player);
+            } else {
+                itemMainhand.damageItem(3, player);
+            }
+            PrettyNiceOres.LOGGER.info("Durability left on '" + itemMainhand.getDisplayName() + "' = " + (itemMainhand.getMaxDamage() - itemMainhand.getItemDamage()));
             for (Vec3i vector : ADJACENT) {
                 if (Thread.currentThread().getStackTrace().length < STACK_LIMIT - 1) {
                     BlockPos posAdjacent = pos.add(vector);
