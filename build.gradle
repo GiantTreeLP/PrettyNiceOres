@@ -44,7 +44,7 @@ group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = "prettyniceores"
 
 minecraft {
-    version = "1.10.2-12.18.1.2039"
+    version = "1.10.2-12.18.1.2044"
     runDir = "run"
 
     // the mappings can be changed at any time, and must be in the following format.
