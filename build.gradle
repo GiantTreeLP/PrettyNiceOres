@@ -36,8 +36,6 @@ compileJava {
     targetCompatibility = 1.8
 }
 
-
-
 version = "1.10.2-0.4.3"
 group = "gtlp.prettyniceores" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 //noinspection GroovyUnusedAssignment
@@ -77,8 +75,7 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    compile 'org.apache.commons:commons-math3:3.3'
-    provided 'junit:junit:4.12'
+    compile 'junit:junit:4.12'
 }
 
 processResources {
