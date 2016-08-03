@@ -69,9 +69,9 @@ public class PrettyNiceOres {
         }
     };
 
-    private static final Map<String, Block> blockList = new HashMap<>();
-    private static final Map<String, Item> itemList = new HashMap<>();
-    private static final Map<String, ItemBlock> itemBlockList = new HashMap<>();
+    private static final Map<String, Block> BLOCK_MAP = new HashMap<>();
+    private static final Map<String, Item> ITEM_MAP = new HashMap<>();
+    private static final Map<String, ItemBlock> ITEMBLOCK_MAP = new HashMap<>();
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     private static final List<IRecipe> recipeList = new ArrayList<>();
 
@@ -81,8 +81,8 @@ public class PrettyNiceOres {
     private static PrettyNiceOres instance;
     private NiceConfig config;
 
-    public static Map<String, Block> getBlockList() {
-        return blockList;
+    public static Map<String, Block> getBlockMap() {
+        return BLOCK_MAP;
     }
 
     /**
@@ -91,8 +91,8 @@ public class PrettyNiceOres {
      * @param item to register the item renderer for
      */
     @SideOnly(Side.CLIENT)
-    private static void registerItemRenderer(Item item, int meta) {
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+    private static void registerItemRenderer(Item item) {
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
     /**
@@ -123,42 +123,40 @@ public class PrettyNiceOres {
         }
     }
 
-    private static void filterBlocksAndApplyConfig(final Map<String, Block> blockList, Configuration config) {
+    private static void filterBlocksAndApplyConfig(Configuration config) {
         config.setCategoryComment(Constants.CATEGORY_ENABLED_BLOCKS, I18n.format(String.format(Constants.CONFIG_S_CATEGORY, Constants.CATEGORY_ENABLED_BLOCKS)));
         ConcurrentMap<String, Block> newBlockList = Maps.newConcurrentMap();
-        blockList.entrySet().forEach(entry -> {
+        PrettyNiceOres.BLOCK_MAP.entrySet().forEach(entry -> {
             Property prop = config.get(Constants.CATEGORY_ENABLED_BLOCKS, entry.getKey(), "true", I18n.format("config.enabled_blocks.block.comment", entry.getValue().getLocalizedName()), Property.Type.BOOLEAN);
                     if (prop.getBoolean()) {
                         newBlockList.put(entry.getKey(), entry.getValue());
                     }
                 }
         );
-        blockList.clear();
-        blockList.putAll(newBlockList);
+        PrettyNiceOres.BLOCK_MAP.clear();
+        PrettyNiceOres.BLOCK_MAP.putAll(newBlockList);
     }
 
     /**
      * Adds all replacements for the basic vanilla ores
-     *
-     * @param blockList list to add blocks to
      */
-    private static void addVanillaOres(final Map<String, Block> blockList) {
-        blockList.put(NiceIronOre.NAME, new NiceIronOre());
-        blockList.put(NiceGoldOre.NAME, new NiceGoldOre());
-        blockList.put(NiceCoalOre.NAME, new NiceCoalOre());
-        blockList.put(NiceRedstoneOre.NAME, new NiceRedstoneOre());
-        blockList.put(NiceLapisOre.NAME, new NiceLapisOre());
-        blockList.put(NiceDiamondOre.NAME, new NiceDiamondOre());
-        blockList.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
-        blockList.put(NiceNetherQuartzOre.NAME, new NiceNetherQuartzOre());
+    private static void addVanillaOres(Map<String, Block> blockMap) {
+        blockMap.put(NiceIronOre.NAME, new NiceIronOre());
+        blockMap.put(NiceGoldOre.NAME, new NiceGoldOre());
+        blockMap.put(NiceCoalOre.NAME, new NiceCoalOre());
+        blockMap.put(NiceRedstoneOre.NAME, new NiceRedstoneOre());
+        blockMap.put(NiceLapisOre.NAME, new NiceLapisOre());
+        blockMap.put(NiceDiamondOre.NAME, new NiceDiamondOre());
+        blockMap.put(NiceEmeraldOre.NAME, new NiceEmeraldOre());
+        blockMap.put(NiceNetherQuartzOre.NAME, new NiceNetherQuartzOre());
     }
 
     /**
      * Adds all replacements for mod ores, if they have been created by any other mod.
      *
-     * @param blockList list to add blocks to
+     * @param blockMap list to add blocks to
      */
-    private static void addModOres(final Map<String, Block> blockList) {
+    private static void addModOres(Map<String, Block> blockMap) {
         Block[] blockArray = {
                 new NiceCopperOre(),
                 new NiceTinOre(),
@@ -171,7 +169,7 @@ public class PrettyNiceOres {
         };
 
         Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
-                .forEach(block -> blockList.put(((INamedBlock) block).getName(), block));
+                .forEach(block -> blockMap.put(((INamedBlock) block).getName(), block));
     }
 
     public static NiceConfig getConfig() {
@@ -190,19 +188,19 @@ public class PrettyNiceOres {
 
         RecipeSorter.register(Constants.MOD_ID + ":shapelessoredict", ShapelessOreDictRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
-        addVanillaOres(blockList);
-        addModOres(blockList);
+        addVanillaOres(BLOCK_MAP);
+        addModOres(BLOCK_MAP);
 
-        filterBlocksAndApplyConfig(blockList, config);
+        filterBlocksAndApplyConfig(config);
         addItems();
 
-        blockList.forEach((name, block) -> {
+        BLOCK_MAP.forEach((name, block) -> {
             ItemBlock itemBlock = new ItemBlock(block);
             itemBlock.setRegistryName(block.getRegistryName());
-            itemBlockList.put(block instanceof INamedBlock ? ((INamedBlock) block).getName() : block.getRegistryName().getResourcePath(), itemBlock);
+            ITEMBLOCK_MAP.put(block instanceof INamedBlock ? ((INamedBlock) block).getName() : block.getRegistryName().getResourcePath(), itemBlock);
             GameRegistry.register(block);
         });
-        itemBlockList.forEach((name, item) -> {
+        ITEMBLOCK_MAP.forEach((name, item) -> {
             GameRegistry.register(item);
             Block block = item.getBlock();
             if (block instanceof IOreDictCompatible) {
@@ -210,7 +208,7 @@ public class PrettyNiceOres {
             }
             addSmeltingRecipe(block);
         });
-        itemList.forEach((name, item) -> {
+        ITEM_MAP.forEach((name, item) -> {
             GameRegistry.register(item);
             if (item instanceof IOreDictCompatible) {
                 OreDictionary.registerOre(((IOreDictCompatible) item).getOreDictType(), item);
@@ -228,7 +226,7 @@ public class PrettyNiceOres {
      */
     private void addItems() {
         if (config.get(Constants.CATEGORY_DEBUG, "debug_item", "false", "", Property.Type.BOOLEAN).getBoolean()) {
-            itemList.put(DebugAndTestingItem.NAME, new DebugAndTestingItem());
+            ITEM_MAP.put(DebugAndTestingItem.NAME, new DebugAndTestingItem());
         }
     }
 
@@ -239,17 +237,17 @@ public class PrettyNiceOres {
      */
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        itemList.forEach((name, item) -> {
+        ITEM_MAP.forEach((name, item) -> {
             if (event.getSide().isClient()) {
-                registerItemRenderer(item, 0);
+                registerItemRenderer(item);
             }
         });
-        itemBlockList.forEach((name, item) -> {
+        ITEMBLOCK_MAP.forEach((name, item) -> {
             if (event.getSide().isClient()) {
-                registerItemRenderer(item, 0);
+                registerItemRenderer(item);
             }
         });
-        blockList.entrySet().stream().filter(entry -> entry.getValue() instanceof IOreDictCompatible).forEach(entry -> {
+        BLOCK_MAP.entrySet().stream().filter(entry -> entry.getValue() instanceof IOreDictCompatible).forEach(entry -> {
             IOreDictCompatible block = (IOreDictCompatible) entry.getValue();
             GameRegistry.addRecipe(new ShapelessOreDictRecipe(block.getOreDictType(), block.getOreDictType()));
         });
