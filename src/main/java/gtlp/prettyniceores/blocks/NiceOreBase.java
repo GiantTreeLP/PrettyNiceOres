@@ -12,9 +12,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.random.ISAACRandom;
@@ -109,37 +111,42 @@ public abstract class NiceOreBase extends BlockOre {
         if (!world.getChunkFromBlockCoords(pos).isLoaded()) {
             return;
         }
-        int itemDurability = itemMainhand.getMaxDamage() - itemMainhand.getItemDamage();
-        if (itemMainhand != null && itemMainhand.canHarvestBlock(world.getBlockState(pos)) && itemDurability >= 0 && itemMainhand.stackSize > 0) {
-            int silktouchLvl = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemMainhand);
-            if (silktouchLvl == 0) {
-                int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand);
-                world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
-                if (block.getExpDrop(world.getBlockState(pos), world, pos, fortune) > 0) {
-                    world.spawnEntityInWorld(new EntityXPOrb(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+        if (itemMainhand != null) {
+            if (itemMainhand.canHarvestBlock(world.getBlockState(pos))) {
+                int silktouchLvl = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, itemMainhand);
+                if (silktouchLvl == 0) {
+                    int fortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, itemMainhand);
+                    world.getBlockState(pos).getBlock().dropBlockAsItem(world, player.getPosition(), world.getBlockState(pos), fortune);
+                    if (block.getExpDrop(world.getBlockState(pos), world, pos, fortune) > 0) {
+                        world.spawnEntityInWorld(new EntityXPOrb(world, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ(), block.getExpDrop(world.getBlockState(pos), world, pos, fortune)));
+                    }
+                } else if (silktouchLvl >= 1) {
+                    ItemStack itemStack = createStackedBlock(world.getBlockState(pos));
+                    if (itemStack != null) {
+                        Block.spawnAsEntity(world, player.getPosition(), itemStack);
+                    }
                 }
-            } else if (silktouchLvl >= 1) {
-                ItemStack itemStack = createStackedBlock(world.getBlockState(pos));
-                if (itemStack != null) {
-                    Block.spawnAsEntity(world, player.getPosition(), itemStack);
+
+                //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
+                world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
+                //Increase amount of destroyed blocks
+                blocks.getAndAdd(1);
+
+                if (itemMainhand.stackSize > 0 && itemMainhand.getMaxDamage() - itemMainhand.getItemDamage() > 0) {
+                    itemMainhand.damageItem(damageDistribution.sample(), player);
+                } else {
+                    ForgeEventFactory.onPlayerDestroyItem(player, itemMainhand, EnumHand.MAIN_HAND);
+                    player.setHeldItem(EnumHand.MAIN_HAND, null);
+                    return;
                 }
-            }
-
-            //Destroy the block without any effects (prevents crashes caused by too many sounds or particles)
-            world.setBlockState(pos, Blocks.AIR.getDefaultState(), world.isRemote ? 11 : 3);
-            //Increase amount of destroyed blocks
-            blocks.getAndAdd(1);
-
-            if (itemMainhand.stackSize > 0) {
-                itemMainhand.damageItem(damageDistribution.sample(), player);
-            }
-            PrettyNiceOres.LOGGER.info("Durability left on '" + itemMainhand.getDisplayName() + "' = " + (itemMainhand.getMaxDamage() - itemMainhand.getItemDamage()));
-            for (Vec3i vector : ADJACENT) {
-                if (Thread.currentThread().getStackTrace().length < STACK_LIMIT - 1) {
-                    BlockPos posAdjacent = pos.add(vector);
-                    IBlockState candidateBlockState = world.getBlockState(posAdjacent);
-                    if (candidateBlockState.getBlock() == block) {
-                        ((NiceOreBase) candidateBlockState.getBlock()).getAdjacentBlocks(world, posAdjacent, block, player, itemMainhand, blocks);
+                PrettyNiceOres.LOGGER.info("Durability left on '" + itemMainhand.getDisplayName() + "' = " + (itemMainhand.getMaxDamage() - itemMainhand.getItemDamage()));
+                for (Vec3i vector : ADJACENT) {
+                    if (Thread.currentThread().getStackTrace().length < STACK_LIMIT - 1) {
+                        BlockPos posAdjacent = pos.add(vector);
+                        IBlockState candidateBlockState = world.getBlockState(posAdjacent);
+                        if (candidateBlockState.getBlock() == block) {
+                            ((NiceOreBase) candidateBlockState.getBlock()).getAdjacentBlocks(world, posAdjacent, block, player, itemMainhand, blocks);
+                        }
                     }
                 }
             }
