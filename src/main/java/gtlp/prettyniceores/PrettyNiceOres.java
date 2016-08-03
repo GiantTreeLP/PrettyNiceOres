@@ -59,7 +59,6 @@ import java.util.stream.Stream;
 
 public class PrettyNiceOres {
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
-
     public static final CreativeTabs CREATIVE_TAB = new CreativeTabs(Constants.MOD_ID) {
         @SuppressWarnings("ConstantConditions")
         @SideOnly(Side.CLIENT)

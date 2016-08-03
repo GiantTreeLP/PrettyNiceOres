@@ -1,8 +1,8 @@
 package gtlp.prettyniceores.blocks;
 
+import com.google.common.collect.Lists;
 import gtlp.prettyniceores.Constants;
 import gtlp.prettyniceores.PrettyNiceOres;
-import gtlp.prettyniceores.util.MathUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.state.IBlockState;
@@ -16,6 +16,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.math3.distribution.EnumeratedDistribution;
+import org.apache.commons.math3.random.ISAACRandom;
+import org.apache.commons.math3.util.Pair;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nonnull;
@@ -33,6 +36,8 @@ public abstract class NiceOreBase extends BlockOre {
             new Vec3i(0, -1, 0), new Vec3i(0, -1, 1), new Vec3i(0, 0, -1), new Vec3i(0, 0, 1), new Vec3i(0, 1, -1), new Vec3i(0, 1, 0),
             new Vec3i(0, 1, 1), new Vec3i(1, -1, -1), new Vec3i(1, -1, 0), new Vec3i(1, -1, 1), new Vec3i(1, 0, -1), new Vec3i(1, 0, 0),
             new Vec3i(1, 0, 1), new Vec3i(1, 1, -1), new Vec3i(1, 1, 0), new Vec3i(1, 1, 1)};
+
+    private static final EnumeratedDistribution<Integer> damageDistribution = new EnumeratedDistribution<>(new ISAACRandom(), Lists.newArrayList(new Pair<>(0, 0.1D), new Pair<>(1, 0.3D), new Pair<>(2, 0.4D), new Pair<>(3, 0.2D)));
     //Tested thread stack limit. Global constant, no matter what the actual set stack size is.
     private static final int STACK_LIMIT = 1024;
 
@@ -125,10 +130,8 @@ public abstract class NiceOreBase extends BlockOre {
             //Increase amount of destroyed blocks
             blocks.getAndAdd(1);
 
-            if (itemMainhand.stackSize > 0 && (MathUtils.fastModulo(itemDurability, 3) == 0 || itemDurability < 3)) {
-                itemMainhand.damageItem(1, player);
-            } else {
-                itemMainhand.damageItem(3, player);
+            if (itemMainhand.stackSize > 0) {
+                itemMainhand.damageItem(damageDistribution.sample(), player);
             }
             PrettyNiceOres.LOGGER.info("Durability left on '" + itemMainhand.getDisplayName() + "' = " + (itemMainhand.getMaxDamage() - itemMainhand.getItemDamage()));
             for (Vec3i vector : ADJACENT) {
