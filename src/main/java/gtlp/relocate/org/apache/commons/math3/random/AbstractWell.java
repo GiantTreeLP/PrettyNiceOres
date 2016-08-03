@@ -16,8 +16,6 @@
  */
 package gtlp.relocate.org.apache.commons.math3.random;
 
-import gtlp.relocate.org.apache.commons.math3.util.FastMath;
-
 import java.io.Serializable;
 
 
@@ -85,19 +83,6 @@ abstract class AbstractWell extends BitsStreamGenerator implements Serializable 
     }
 
     /**
-     * Creates a new random number generator using a single int seed.
-     *
-     * @param k    number of bits in the pool (not necessarily a multiple of 32)
-     * @param m1   first parameter of the algorithm
-     * @param m2   second parameter of the algorithm
-     * @param m3   third parameter of the algorithm
-     * @param seed the initial seed (32 bits integer)
-     */
-    AbstractWell(final int k, final int m1, final int m2, final int m3, final int seed) {
-        this(k, m1, m2, m3, new int[]{seed});
-    }
-
-    /**
      * Creates a new random number generator using an int array seed.
      *
      * @param k    number of bits in the pool (not necessarily a multiple of 32)
@@ -107,7 +92,7 @@ abstract class AbstractWell extends BitsStreamGenerator implements Serializable 
      * @param seed the initial seed (32 bits integers array), if null
      *             the seed of the generator will be related to the current time
      */
-    AbstractWell(final int k, final int m1, final int m2, final int m3, final int[] seed) {
+    private AbstractWell(final int k, final int m1, final int m2, final int m3, final int[] seed) {
 
         // the bits pool contains k bits, k = r w - p where r is the number
         // of w bits blocks, w is the block size (always 32 in the original paper)
@@ -138,19 +123,6 @@ abstract class AbstractWell extends BitsStreamGenerator implements Serializable 
     }
 
     /**
-     * Creates a new random number generator using a single long seed.
-     *
-     * @param k    number of bits in the pool (not necessarily a multiple of 32)
-     * @param m1   first parameter of the algorithm
-     * @param m2   second parameter of the algorithm
-     * @param m3   third parameter of the algorithm
-     * @param seed the initial seed (64 bits integer)
-     */
-    AbstractWell(final int k, final int m1, final int m2, final int m3, final long seed) {
-        this(k, m1, m2, m3, new int[]{(int) (seed >>> 32), (int) (seed & 0xffffffffL)});
-    }
-
-    /**
      * Reinitialize the generator as if just built with the given int array seed.
      * <p>The state of the generator is exactly the same as a new
      * generator built with the same seed.</p>
@@ -166,7 +138,7 @@ abstract class AbstractWell extends BitsStreamGenerator implements Serializable 
             return;
         }
 
-        System.arraycopy(seed, 0, v, 0, FastMath.min(seed.length, v.length));
+        System.arraycopy(seed, 0, v, 0, seed.length <= v.length ? seed.length : v.length);
 
         if (seed.length < v.length) {
             for (int i = seed.length; i < v.length; ++i) {

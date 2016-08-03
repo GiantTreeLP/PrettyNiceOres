@@ -17,7 +17,6 @@
 package gtlp.relocate.org.apache.commons.math3.exception;
 
 import gtlp.relocate.org.apache.commons.math3.exception.util.Localizable;
-import gtlp.relocate.org.apache.commons.math3.exception.util.LocalizedFormats;
 
 /**
  * Exception to be thrown when two dimensions differ.
@@ -41,18 +40,6 @@ public class DimensionMismatchException extends MathIllegalNumberException {
                                        int wrong,
                                        int expected) {
         super(specific, wrong, expected);
-        /* Correct dimension. */
-    }
-
-    /**
-     * Construct an exception from the mismatched dimensions.
-     *
-     * @param wrong    Wrong dimension.
-     * @param expected Expected dimension.
-     */
-    public DimensionMismatchException(int wrong,
-                                      int expected) {
-        this(LocalizedFormats.DIMENSIONS_MISMATCH_SIMPLE, wrong, expected);
     }
 
 }

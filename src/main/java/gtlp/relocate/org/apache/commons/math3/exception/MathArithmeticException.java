@@ -4,7 +4,7 @@ import gtlp.relocate.org.apache.commons.math3.exception.util.ExceptionContext;
 import gtlp.relocate.org.apache.commons.math3.exception.util.Localizable;
 
 public final class MathArithmeticException extends ArithmeticException {
-    private final ExceptionContext context = new ExceptionContext(this);
+    private final ExceptionContext context = new ExceptionContext();
 
     public MathArithmeticException(Localizable pattern, Object... args) {
         this.context.addMessage(pattern, args);

@@ -25,12 +25,6 @@ import java.util.Locale;
  * @since 2.2
  */
 public interface Localizable extends Serializable {
-    /**
-     * Gets the source (non-localized) string.
-     *
-     * @return the source string.
-     */
-    String getSourceString();
 
     /**
      * Gets the localized string.

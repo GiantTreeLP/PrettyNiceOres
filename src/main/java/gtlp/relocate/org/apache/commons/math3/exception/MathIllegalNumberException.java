@@ -49,7 +49,6 @@ class MathIllegalNumberException extends MathIllegalArgumentException {
                                Number wrong,
                                Object... arguments) {
         super(pattern, wrong, arguments);
-        /* Requested. */
     }
 
 }

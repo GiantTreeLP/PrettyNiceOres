@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Locale;
 
 public final class ExceptionContext implements Serializable {
-    private List<Localizable> msgPatterns = new ArrayList();
-    private List<Object[]> msgArguments = new ArrayList();
+    private List<Localizable> msgPatterns = new ArrayList<>();
+    private List<Object[]> msgArguments = new ArrayList<>();
 
-    public ExceptionContext(Throwable throwable) {
+    public ExceptionContext() {
         new HashMap();
     }
 
@@ -30,7 +30,6 @@ public final class ExceptionContext implements Serializable {
 
     private String getMessage(Locale locale) {
         String var3 = ": ";
-        Locale var2 = locale;
         ExceptionContext var10 = this;
         StringBuilder var4 = new StringBuilder();
         int var5 = 0;
@@ -39,7 +38,7 @@ public final class ExceptionContext implements Serializable {
         for (int var7 = 0; var7 < var6; ++var7) {
             Localizable var8 = var10.msgPatterns.get(var7);
             Object[] var9 = var10.msgArguments.get(var7);
-            MessageFormat var11 = new MessageFormat(var8.getLocalizedString(var2), var2);
+            MessageFormat var11 = new MessageFormat(var8.getLocalizedString(locale), locale);
             var4.append(var11.format(var9));
             ++var5;
             if (var5 < var6) {

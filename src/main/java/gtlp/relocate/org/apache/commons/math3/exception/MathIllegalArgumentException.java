@@ -4,7 +4,7 @@ import gtlp.relocate.org.apache.commons.math3.exception.util.ExceptionContext;
 import gtlp.relocate.org.apache.commons.math3.exception.util.Localizable;
 
 public class MathIllegalArgumentException extends IllegalArgumentException {
-    private final ExceptionContext context = new ExceptionContext(this);
+    private final ExceptionContext context = new ExceptionContext();
 
     public MathIllegalArgumentException(Localizable pattern, Object... args) {
         this.context.addMessage(pattern, args);
