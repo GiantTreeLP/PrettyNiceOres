@@ -25,6 +25,7 @@ public class NiceGuiFactory implements IModGuiFactory {
         return null;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public final RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
         return null;

@@ -1,0 +1,11 @@
+Information regarding the use of third-party libraries:
+
+This mod uses parts of Apache Commons Math that are modified to reduce the size and improve performance for this
+particular use-case.
+According to the attached license all files that have been modified need to be declared:
+
+    Modifications:
+        - moved _org.apache.commons.math3_ to _gtlp.relocate.org.apache.commons.math3_ to prevent classpath issues
+        - All files in gtlp.relocate.org.apache.commons.math3 are part of Apache Commons Math as of 4th of August 2016
+        - All files in gtlp.relocate.org.apache.commons.math3 have been modified to suit the needs of this project
+        - All rights of the source still belong to their respective creator, maintainers, communities or owners

@@ -30,7 +30,7 @@ public class NiceOresGenerator implements IWorldGenerator {
     private final ConcurrentMap<ItemStackHolder, IBlockState> replacementMap = Maps.newConcurrentMap();
 
     public NiceOresGenerator() {
-        PrettyNiceOres.getBlockList().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
+        PrettyNiceOres.getBlockMap().entrySet().stream().filter(entry -> entry.getValue() instanceof INiceOre && entry.getValue() instanceof IOreDictCompatible).forEach(niceOre -> OreDictionary.getOres(((IOreDictCompatible) niceOre.getValue()).getOreDictType()).forEach(stack -> {
             if (stack.getItem() instanceof ItemBlock && !(stack.getItem() instanceof INiceOre)) {
                 replacementMap.put(new ItemStackHolder(stack), niceOre.getValue().getDefaultState());
             }
