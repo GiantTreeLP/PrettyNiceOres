@@ -16,14 +16,13 @@
  */
 package gtlp.relocate.org.apache.commons.math3.random;
 
-
 /**
  * Interface extracted from <code>java.util.Random</code>.  This interface is
  * implemented by {@link }.
  *
  * @since 1.1
  */
-public interface RandomGenerator {
+interface RandomGenerator {
 
     /**
      * Sets the seed of the underlying random number generator using an

@@ -34,11 +34,6 @@ package gtlp.relocate.org.apache.commons.math3.random;
 public class Well19937c extends AbstractWell {
 
     /**
-     * Serializable version identifier.
-     */
-    private static final long serialVersionUID = -7203498180754925124L;
-
-    /**
      * Number of bits in the pool.
      */
     private static final int K = 19937;

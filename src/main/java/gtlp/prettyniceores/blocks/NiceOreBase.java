@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import gtlp.prettyniceores.Constants;
 import gtlp.prettyniceores.PrettyNiceOres;
 import gtlp.relocate.org.apache.commons.math3.distribution.EnumeratedDistribution;
-import gtlp.relocate.org.apache.commons.math3.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.state.IBlockState;
@@ -40,7 +39,7 @@ public abstract class NiceOreBase extends BlockOre {
 
     //Weighted distribution of damage dealt to the tool. Seems fair.
     @SuppressWarnings("unchecked")
-    private static final EnumeratedDistribution<Integer> damageDistribution = new EnumeratedDistribution<>(Lists.newArrayList(new Pair<>(0, 0.1D), new Pair<>(1, 0.3D), new Pair<>(2, 0.4D), new Pair<>(3, 0.2D)));
+    private static final EnumeratedDistribution<Integer> damageDistribution = new EnumeratedDistribution<>(Lists.newArrayList(new EnumeratedDistribution.Pair<>(0, 0.1D), new EnumeratedDistribution.Pair<>(1, 0.3D), new EnumeratedDistribution.Pair<>(2, 0.4D), new EnumeratedDistribution.Pair<>(3, 0.2D)));
     //Tested thread stack limit. Global constant, no matter what the actual set stack size is.
     private static final int STACK_LIMIT = 1024;
 

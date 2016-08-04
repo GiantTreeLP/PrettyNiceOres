@@ -16,9 +16,6 @@
  */
 package gtlp.relocate.org.apache.commons.math3.random;
 
-import java.io.Serializable;
-
-
 /**
  * This abstract class implements the WELL class of pseudo-random number generator
  * from Fran&ccedil;ois Panneton, Pierre L'Ecuyer and Makoto Matsumoto.
@@ -33,12 +30,8 @@ import java.io.Serializable;
  * @see <a href="http://www.iro.umontreal.ca/~panneton/WELLRNG.html">WELL Random number generator</a>
  * @since 2.2
  */
-abstract class AbstractWell extends BitsStreamGenerator implements Serializable {
+abstract class AbstractWell extends BitsStreamGenerator {
 
-    /**
-     * Serializable version identifier.
-     */
-    private static final long serialVersionUID = -817701723016583596L;
     /**
      * Bytes pool.
      */
