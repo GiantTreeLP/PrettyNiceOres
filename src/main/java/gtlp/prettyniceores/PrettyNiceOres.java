@@ -1,5 +1,6 @@
 package gtlp.prettyniceores;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import gtlp.prettyniceores.blocks.modded.*;
 import gtlp.prettyniceores.blocks.vanilla.*;
@@ -38,8 +39,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -68,11 +67,10 @@ public class PrettyNiceOres {
         }
     };
 
-    private static final Map<String, Block> BLOCK_MAP = new HashMap<>();
-    private static final Map<String, Item> ITEM_MAP = new HashMap<>();
-    private static final Map<String, ItemBlock> ITEMBLOCK_MAP = new HashMap<>();
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    private static final List<IRecipe> recipeList = new ArrayList<>();
+    private static final Map<String, Block> BLOCK_MAP = Maps.newHashMap();
+    private static final Map<String, Item> ITEM_MAP = Maps.newHashMap();
+    private static final Map<String, ItemBlock> ITEMBLOCK_MAP = Maps.newHashMap();
+    private static final List<IRecipe> recipeList = Lists.newArrayList();
 
     @SidedProxy(clientSide = "gtlp.prettyniceores.client.ClientProxy", serverSide = "gtlp.prettyniceores.common.CommonProxy")
     public static CommonProxy proxy;
@@ -156,19 +154,16 @@ public class PrettyNiceOres {
      * @param blockMap list to add blocks to
      */
     private static void addModOres(Map<String, Block> blockMap) {
-        Block[] blockArray = {
-                new NiceCopperOre(),
+
+        Stream.of(new NiceCopperOre(),
                 new NiceTinOre(),
                 new NiceSilverOre(),
                 new NiceLeadOre(),
                 new NiceNickelOre(),
                 new NicePlatinumOre(),
                 new NiceZincOre(),
-                new NiceMercuryOre(),
-        };
-
-        Stream.of(blockArray).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
-                .forEach(block -> blockMap.put(((INamedBlock) block).getName(), block));
+                new NiceMercuryOre()).filter(block -> block instanceof IOreDictCompatible && block instanceof INamedBlock)
+                .forEach(block -> blockMap.put(block.getName(), block));
     }
 
     public static NiceConfig getConfig() {
