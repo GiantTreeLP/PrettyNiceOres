@@ -16,6 +16,7 @@
  */
 package gtlp.relocate.org.apache.commons.math3.distribution;
 
+import com.google.common.collect.Lists;
 import gtlp.relocate.org.apache.commons.math3.random.Well19937c;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public final class EnumeratedDistribution<T> {
      */
     public EnumeratedDistribution(List<Pair<T, Double>> pmf) throws IllegalArgumentException {
         this.random = new Well19937c();
-        this.singletons = new ArrayList<>(pmf.size());
+        this.singletons = Lists.newArrayListWithCapacity(pmf.size());
         double[] probs = new double[pmf.size()];
 
         for (int sum = 0; sum < pmf.size(); ++sum) {
@@ -175,7 +176,7 @@ public final class EnumeratedDistribution<T> {
      * @param <V> Value type.
      * @since 3.0
      */
-    private static class Pair<K, V> {
+    public static class Pair<K, V> {
         /**
          * Key.
          */

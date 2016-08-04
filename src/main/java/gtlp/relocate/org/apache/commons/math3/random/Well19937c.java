@@ -31,27 +31,52 @@ package gtlp.relocate.org.apache.commons.math3.random;
  * @see <a href="http://www.iro.umontreal.ca/~panneton/WELLRNG.html">WELL Random number generator</a>
  * @since 2.2
  */
-public class Well19937c extends AbstractWell {
+public class Well19937c {
 
     /**
      * Number of bits in the pool.
      */
     private static final int K = 19937;
-
     /**
      * First parameter of the algorithm.
      */
     private static final int M1 = 70;
-
     /**
      * Second parameter of the algorithm.
      */
     private static final int M2 = 179;
-
     /**
      * Third parameter of the algorithm.
      */
     private static final int M3 = 449;
+    /**
+     * Bytes pool.
+     */
+    private final int[] v;
+    /**
+     * Index indirection table giving for each index its predecessor taking table size into account.
+     */
+    private final int[] iRm1;
+    /**
+     * Index indirection table giving for each index its second predecessor taking table size into account.
+     */
+    private final int[] iRm2;
+    /**
+     * Index indirection table giving for each index the value index + m1 taking table size into account.
+     */
+    private final int[] i1;
+    /**
+     * Index indirection table giving for each index the value index + m2 taking table size into account.
+     */
+    private final int[] i2;
+    /**
+     * Index indirection table giving for each index the value index + m3 taking table size into account.
+     */
+    private final int[] i3;
+    /**
+     * Current index in the bytes pool.
+     */
+    private int index;
 
     /**
      * Creates a new random number generator.
@@ -59,14 +84,73 @@ public class Well19937c extends AbstractWell {
      * seed.</p>
      */
     public Well19937c() {
-        super(K, M1, M2, M3);
+        // the bits pool contains k bits, k = r w - p where r is the number
+        // of w bits blocks, w is the block size (always 32 in the original paper)
+        // and p is the number of unused bits in the last block
+        final int w = 32;
+        final int r = (K + w - 1) / w;
+        v = new int[r];
+        index = 0;
+
+        // precompute indirection index tables. These tables are used for optimizing access
+        // they allow saving computations like "(j + r - 2) % r" with costly modulo operations
+        iRm1 = new int[r];
+        iRm2 = new int[r];
+        i1 = new int[r];
+        i2 = new int[r];
+        i3 = new int[r];
+        for (int j = 0; j < r; ++j) {
+            iRm1[j] = (j + r - 1) % r;
+            iRm2[j] = (j + r - 2) % r;
+            i1[j] = (j + M1) % r;
+            i2[j] = (j + M2) % r;
+            i3[j] = (j + M3) % r;
+        }
+
+        // initialize the pool content
+        setSeed(null);
     }
 
     /**
-     * {@inheritDoc}
+     * Reinitialize the generator as if just built with the given int array seed.
+     * <p>The state of the generator is exactly the same as a new
+     * generator built with the same seed.</p>
+     *
+     * @param seed the initial seed (32 bits integers array). If null
+     *             the seed of the generator will be the system time plus the system identity
+     *             hash code of the instance.
      */
-    @Override
-    protected int next(final int bits) {
+    private void setSeed(final int[] seed) {
+        if (seed == null) {
+            setSeed(System.currentTimeMillis() + System.identityHashCode(this));
+            return;
+        }
+
+        System.arraycopy(seed, 0, v, 0, seed.length <= v.length ? seed.length : v.length);
+
+        if (seed.length < v.length) {
+            for (int i = seed.length; i < v.length; ++i) {
+                final long l = v[i - seed.length];
+                v[i] = (int) ((1812433253L * (l ^ (l >> 30)) + i) & 0xffffffffL);
+            }
+        }
+
+        index = 0;
+    }
+
+    /**
+     * Reinitialize the generator as if just built with the given long seed.
+     * <p>The state of the generator is exactly the same as a new
+     * generator built with the same seed.</p>
+     *
+     * @param seed the initial seed (64 bits integer)
+     */
+    private void setSeed(final long seed) {
+        setSeed(new int[]{(int) (seed >>> 32), (int) (seed & 0xffffffffL)});
+    }
+
+
+    private int next(final int bits) {
 
         final int indexRm1 = iRm1[index];
         final int indexRm2 = iRm2[index];
@@ -95,6 +179,15 @@ public class Well19937c extends AbstractWell {
 
         return z4 >>> (32 - bits);
 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public final double nextDouble() {
+        long high = (long) this.next(26) << 26;
+        int low = this.next(26);
+        return (double) (high | (long) low) * 2.220446049250313E-16D;
     }
 
 }
