@@ -10,7 +10,6 @@ import gtlp.prettyniceores.generators.NiceOresGenerator;
 import gtlp.prettyniceores.interfaces.INamedBlock;
 import gtlp.prettyniceores.interfaces.IOreDictCompatible;
 import gtlp.prettyniceores.interfaces.ISmeltable;
-import gtlp.prettyniceores.items.DebugAndTestingItem;
 import gtlp.prettyniceores.recipes.ShapelessOreDictRecipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -225,9 +224,7 @@ public class PrettyNiceOres {
      * Adds items.
      */
     private void addItems() {
-        if (config.get(Constants.CATEGORY_DEBUG, "debug_item", "false", "", Property.Type.BOOLEAN).getBoolean()) {
-            ITEM_MAP.put(DebugAndTestingItem.NAME, new DebugAndTestingItem());
-        }
+
     }
 
     /**
